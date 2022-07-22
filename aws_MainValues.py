@@ -190,6 +190,10 @@ output=suppFunct.getOutput('./borrar.json')
 suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberEC2Instances'),output,True)
 
 
+
+#aws lambda list-functions | jq '.Functions | length'
+
+
 suppFunct.delFile('./apiResults.txt')
 suppFunct.delFile('./apiResults.json')
 
