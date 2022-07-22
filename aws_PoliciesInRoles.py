@@ -28,13 +28,15 @@ suppFunct.checkExistCreate(resultsFile)
 ############################################################################################
 ########   Gathering the data section
 ############################################################################################
+
 os.system('aws iam  get-account-authorization-details | jq \'.RoleDetailList[] | {RoleName, RoleId}\' > apiResults.json')
 os.system('jq -r \'[.[]] | @csv\' apiResults.json > apiResults.txt') #Convert the json file to csv, makes life easier for next iteration
-
 os.system('wc -l < ./apiResults.txt >borrar.txt')
 myNumRes=open('./borrar.txt',"r") 
 numberOfPolicies=myNumRes.read()
 numberOfPolicies=int(numberOfPolicies.rstrip('\r\n'))
+
+
 ##############################################
 # Lists all managed policies that are attached to the specified IAM role.
 ##############################################    
@@ -54,7 +56,7 @@ for line in myApiResults:
     else:
         suppFunct.saveValues(resultsFile,suppFunct.addTab(suppFunct.addQuotes('managedPoliciesAttachedToIAMRole_'+myLine[0])),suppFunct.addQuotes('n/a'),True)
 
-myApiResults.close()
+#myApiResults.close()
 
 
 ##############################################

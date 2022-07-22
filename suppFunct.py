@@ -27,7 +27,11 @@ def getOutput(fileName):
         output=fp.read()
         fp.close()
         os.remove(fileName)
-        return output
+        if len(output)>0:
+            return output
+        else:
+            return "\"n/a\""
+
 
 def getOutputApi(fileName,node):
     if os.path.exists(fileName):    

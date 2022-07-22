@@ -100,32 +100,6 @@ for line in myApiResults:
     suppFunct.delFile('./myBlocks.txt')
     suppFunct.delFile('./myBlocks.json')
       
-
-
-
-
-   
-#    os.system('jq -r \'[.[]] | @csv \' myBlocks.json > myBlocks.txt') #Convert the json file to csv, makes life easier for next iteration
-#    myBlocks=open('./myBlocks.txt',"r")
-    
-#    blocks=myBlocks.read() #Read the contents, should be a collection of true/false
-#    blocks = blocks.replace('\"',"").replace('\'',"").split(",") #We get the  Name of the bucket
-    
-#    if myCounter<int(numberOfBuckets):
-#        if (blocks[0].rstrip('\r\n')=='true' and blocks[1].rstrip('\r\n')=='true' and blocks[2].rstrip('\r\n')=='true' and blocks[3].rstrip('\r\n')=='true'):
-#            saveValues(addTab(suppFunct.addQuotes('isBlocked_'+myLine[2])),"True","True")
-#        else:
-#            saveValues(addTab(suppFunct.addQuotes('isBlocked_'+myLine[2])),"False","True")
-#    else:
-#        if (blocks[0].rstrip('\r\n')=='true' and blocks[1].rstrip('\r\n')=='true' and blocks[2].rstrip('\r\n')=='true' and blocks[3].rstrip('\r\n')=='true'):
-#            saveValues(addTab(suppFunct.addQuotes('isBlocked_'+myLine[2])),"True","False")
-#        else:
-#            saveValues(addTab(suppFunct.addQuotes('isBlocked_'+myLine[2])),"False","False")
-                        
-#    myCounter+=1    
-#    delFile('./myBlocks.txt')
-#    delFile('./myBlocks.json')
-    
             
 with open(resultsFile, 'a') as f:
     f.write('    },\n')
@@ -186,6 +160,34 @@ with open(resultsFile, 'a') as f:
 
 
 
+
+##############################################
+# Check the number of cloudfront list-distributions
+##############################################  
+os.system('aws cloudfront list-distributions | jq \'.DistributionList.Items | length\' > borrar.json')
+output=suppFunct.getOutput('./borrar.json') 
+suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberCloudfrontDistributions'),output,True)
+ 
+##############################################
+# Check the number CloudFront functions in your Amazon Web Services account.
+##############################################  
+os.system('aws cloudfront list-distributions | jq \'.FunctionList.Items | length\' > borrar.json')
+output=suppFunct.getOutput('./borrar.json') 
+suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberCloudfrontFunctions'),output,True)
+
+##############################################
+# Check the number of existing clusters.
+##############################################  
+os.system('aws ecs list-clusters | jq \'.clusterArns | length \' > borrar.json')
+output=suppFunct.getOutput('./borrar.json') 
+suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberClusters'),output,True)
+ 
+##############################################
+# Check the number of ec2 instances
+##############################################  
+os.system('aws ec2 describe-instances  | jq \'.Reservations  | length \' > borrar.json')
+output=suppFunct.getOutput('./borrar.json') 
+suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberEC2Instances'),output,True)
 
 
 suppFunct.delFile('./apiResults.txt')
