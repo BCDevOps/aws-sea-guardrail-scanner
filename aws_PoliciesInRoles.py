@@ -89,7 +89,7 @@ for line in myApiResults:
     policiesCounter+=1 
     
 with open(resultsFile, 'a') as f:
-    f.write('    },\n')
+    f.write('    ,\n')
 
 
 

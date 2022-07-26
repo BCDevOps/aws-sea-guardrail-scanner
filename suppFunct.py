@@ -64,3 +64,44 @@ def checkExistCreate(fileName): # Checks the existence of the results file, if a
     print("Script will (re)create the file " + fileName)
     with open(fileName, 'w') as f:
         f.write('{\n')
+        
+def addHeader(title):
+    html="<html xmlns=\"https://www.w3.org/1999/xhtml\" lang=\"ca\" xml:lang=\"ca\">\n"     
+    html=html+ "<head>\n"
+    html=html+ "<style>\n"
+    html=html+ "body {\n"
+    html=html+ "    font-family: Arial, Helvetica, sans-serif;\n"
+    html=html+ "}\n"
+
+    html=html+ "/* Dashed border */\n"
+    html=html+ "hr.dashed {\n"
+    html=html+ "    border-top: 3px dashed #bbb;\n"
+    html=html+ "}\n"
+
+    html=html+ "/* Dotted border */\n"
+    html=html+ "hr.dotted {\n"
+    html=html+ "    border-top: 3px dotted #bbb;\n"
+    html=html+ "}\n"
+
+    html=html+ "/* Solid border */\n"
+    html=html+ "hr.solid {\n"
+    html=html+ "    border-top: 3px solid #bbb;\n"
+    html=html+ "}\n"
+
+    html=html+ "/* Rounded border */\n"
+    html=html+ "hr.rounded {\n"
+    html=html+ "    border-top: 8px solid #bbb;\n"
+    html=html+ "    border-radius: 5px;\n"
+    html=html+ "}\n"
+    html=html+ "</style>\n"
+    
+    html=html+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n"
+    html=html+ "<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css' />\n"
+    html=html+ "<title>Guardrails Snapshot - " + title + "</title>\n"
+    html=html+ "</head>\n"
+    html=html+ "<body>\n"
+    html=html+ "<H1><center>Guardrails Snapshot - " + title + "</center></H1>\n"
+    html=html+ "<hr class=\"rounded\">\n"
+    html=html+ "<H2>Test Information</H2>\n"
+    
+    return html
