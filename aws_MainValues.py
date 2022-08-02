@@ -2,6 +2,7 @@
 import os
 
 import suppFunct
+import convertToHTML
 from os.path import exists
 
 # To run the script you need to export the following values as env variables, or if executing
@@ -18,11 +19,24 @@ AWS_SESSION_TOKEN=os.environ.get('AWS_SESSION_TOKEN')
 AWS_DEFAULT_REGION=os.environ.get('AWS_DEFAULT_REGION')
 
 
-awsAccountUsed="BCGOV_MASTER_admin_umafubc9"
+#awsAccountUsed="BCGOV_WORKLOAD_test_a2b2c3d4"
 resultsFile="./resultsKeyParameters.json"
 
 
 suppFunct.checkExistCreate(resultsFile)
+
+
+
+############################################################################################
+########   Asking for the account name
+############################################################################################
+
+print('Enter the account name (if none, "BCGOV_WORKLOAD_test_a1b2c3d4" will be used instead')
+myInput=input()
+awsAccountUsed = myInput if len(myInput)>0 else "BCGOV_WORKLOAD_test_a1b2c3d4"
+
+
+print('The account name that will be used is:' + awsAccountUsed)
 
 
 ############################################################################################
@@ -89,14 +103,15 @@ for line in myApiResults:
         if len(blocks)>2: 
             suppFunct.saveValues(resultsFile,suppFunct.addTab(suppFunct.addQuotes(myLine[2])),suppFunct.addQuotes('Has Public Access Block'),True)
         else:
-            suppFunct.saveValues(resultsFile,suppFunct.addTab(suppFunct.addQuotes(myLine[2])),suppFunct.addQuotes('Does not have a Public Access Block'),True)
+            suppFunct.saveValues(resultsFile,suppFunct.addTab(suppFunct.addQuotes(myLine[2])),suppFunct.addQuotes('n/a'),True)
     else:
         if len(blocks)>2: 
             suppFunct.saveValues(resultsFile,suppFunct.addTab(suppFunct.addQuotes(myLine[2])),suppFunct.addQuotes('Has Public Access Block'),False)
         else:
-            suppFunct.saveValues(resultsFile,suppFunct.addTab(suppFunct.addQuotes(myLine[2])),suppFunct.addQuotes('Does not have a Public Access Block'),False)
+            suppFunct.saveValues(resultsFile,suppFunct.addTab(suppFunct.addQuotes(myLine[2])),suppFunct.addQuotes('n/a'),False)
    
     myCounter+=1    
+
     suppFunct.delFile('./myBlocks.txt')
     suppFunct.delFile('./myBlocks.json')
       
@@ -198,6 +213,9 @@ suppFunct.delFile('./apiResults.txt')
 suppFunct.delFile('./apiResults.json')
 
 suppFunct.closeResultsFile(resultsFile,awsAccountUsed)
+
+
+convertToHTML.convertKeyParam()
 
 
 #Perhaps check how many   "AttachedManagedPolicies":  are associated to each role

@@ -7,9 +7,7 @@ from os.path import exists
 def convertToHTML(value):
     convertKeyParam() if value=="1" else  convertPoliciesRoles() if  value=="2"  else print("Not a valid input number")
     return
-
-
- 
+###########################################  
 
 def importJsonFile(jsonFile):
     try:
@@ -18,6 +16,7 @@ def importJsonFile(jsonFile):
             return json_data
     except FileNotFoundError:
         print("my_file not found")
+    return    
         
 ###########################################     
 def convertKeyParam():
@@ -38,7 +37,7 @@ def convertKeyParam():
     html=html+"<P><B>Number of AWS IAM roles in LZ2</B> : " + str(jsonData["awsNumberIamRoles"]) + " </P>\n"
     html=html+"<P><B>Number of AWS IAM policies in LZ2</B> : " +str(jsonData["awsNumberIamPolicies"]) + " </P>\n"
 
-    html=html+"<P><B>Number of roles associated to the admin user in LZ2</B> : " + str(jsonData["awsNumberRoles"]) + " </P>\n"
+    html=html+"<P><B>Number of roles associated to the user in LZ2</B> : " + str(jsonData["awsNumberRoles"]) + " </P>\n"
     html=html+"<P><B>Number of Policies available to the AWS account in LZ2</B> : " + str(jsonData["awsNumberAvailablePolicies"]) + " </P>\n"
     html=html+"<P><B>Number of accounts in LZ2</B> : " +str(jsonData["awsTotalNumberAccounts"]) + " </P>\n"
 
@@ -52,6 +51,7 @@ def convertKeyParam():
     html=html+ "<H2>S3 buckets values</H2>\n"
     html=html+"<P><B>Number of S3 buckets in LZ2</B> : " +str(jsonData["awsNumber_S3_Buckets"]) + " </P>\n"
     html=html+ "<H3>List of S3 buckets and block access policy status</H3>\n"
+    html=html+ "<P>a n/a label means there is no policy associated to the S3 Bucket, by default, access is denied so there is no public access </P>\n"
     html=html+"<UL>"
     jsn_list = jsonData['S3Buckets_AccessPolicy']
     for key in jsn_list:
@@ -72,7 +72,8 @@ def convertKeyParam():
   
     with open('./resultsKeyParameters.html', 'w') as f: #The report name is harcoded.
         f.write(html)
-
+    
+    return  
 
 ###########################################
     
@@ -112,16 +113,6 @@ def convertPoliciesRoles():
   
     with open('./resultsPoliciesInRoles.html', 'w') as f:
         f.write(html)  
+        
+    return  
       
-###########################################
-# Main program
-###########################################
-
-print('Enter a number to convert the following predefined files from json to HTML')
-print('- 1 parse resultsKeyParameters.json')
-print('- 2 parse resultsPoliciesRoles.json')
-sel = input()
-
-myFlag=convertToHTML(sel)
-
-

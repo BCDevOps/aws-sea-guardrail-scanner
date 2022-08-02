@@ -49,6 +49,8 @@ def closeResultsFile(resultsFile,awsAccountUsed):
         f.write('       \"AWS_DEFAULT_REGION\" : "' + os.environ.get('AWS_DEFAULT_REGION') + '"\n')
         f.write('   }\n')
         f.write('}')
+        
+        return
 
 def delFile(fileName):
     if os.path.exists(fileName):
@@ -64,6 +66,8 @@ def checkExistCreate(fileName): # Checks the existence of the results file, if a
     print("Script will (re)create the file " + fileName)
     with open(fileName, 'w') as f:
         f.write('{\n')
+        
+    return    
         
 def addHeader(title):
     html="<html xmlns=\"https://www.w3.org/1999/xhtml\" lang=\"ca\" xml:lang=\"ca\">\n"     

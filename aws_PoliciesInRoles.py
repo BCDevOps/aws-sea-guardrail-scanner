@@ -2,6 +2,7 @@
 import os
 
 import suppFunct
+import convertToHTML
 import datetime
 from os.path import exists
 
@@ -19,11 +20,22 @@ AWS_SESSION_TOKEN=os.environ.get('AWS_SESSION_TOKEN')
 AWS_DEFAULT_REGION=os.environ.get('AWS_DEFAULT_REGION')
 
 
-awsAccountUsed="BCGOV_MASTER_admin_umafubc9"
+
 resultsFile="./resultsPoliciesInRoles.json"
 
 suppFunct.checkExistCreate(resultsFile)
 
+
+############################################################################################
+########   Asking for the account name
+############################################################################################
+
+print('Enter the account name (if none, "BCGOV_WORKLOAD_test_a1b2c3d4" will be used instead')
+myInput=input()
+awsAccountUsed = myInput if len(myInput)>0 else "BCGOV_WORKLOAD_test_a1b2c3d4"
+
+
+print('The account name that will be used is:' + awsAccountUsed)
 
 ############################################################################################
 ########   Gathering the data section
@@ -101,6 +113,7 @@ suppFunct.delFile('./apiResults.json')
 
 suppFunct.closeResultsFile(resultsFile,awsAccountUsed)
 
+convertToHTML.convertPoliciesRoles()
 
 #Perhaps check how many   "AttachedManagedPolicies":  are associated to each role
 #conserving the number and the name will be another test of stability
