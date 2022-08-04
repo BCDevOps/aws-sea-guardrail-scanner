@@ -1,5 +1,6 @@
 import os
 import datetime
+import json
 from os.path import exists
 
 ##############################################
@@ -62,7 +63,12 @@ def checkExistCreate(fileName): # Checks the existence of the results file, if a
     if os.path.exists(fileName):
         print("Script will remove  the existing file " + fileName)
         os.remove(fileName)
-
+    
+    if not os.path.exists("./results"):
+        print("Folder ./results has been created")
+        os.mkdir("./results")
+    
+    
     print("Script will (re)create the file " + fileName)
     with open(fileName, 'w') as f:
         f.write('{\n')
@@ -109,3 +115,13 @@ def addHeader(title):
     html=html+ "<H2>Test Information</H2>\n"
     
     return html
+
+
+def importJsonFile(jsonFile):
+    try:
+        with open(jsonFile, 'r') as json_file:
+            json_data = json.load(json_file)
+            return json_data
+    except FileNotFoundError:
+        print('\"'+ jsonFile + '\"' + 'not found')
+    return   
