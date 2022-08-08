@@ -22,17 +22,18 @@ You need to have on your machine
 
 
 
-# Getting the Guardrails snapshot
+# Creating a Guardrails snapshot
 
 On the command line, run
-    **getSnapshot.py**
+
+    getSnapshot.py
 
 The script will ask you for the name of the account you are checking. The AWS credentials must be associated to this account. By default it will use 
     *BCGOV_MASTER_admin_tmhl5tvs*
 
 Please, keep the format of the account name as BCGOV_<Type>_<Role>_<LicensePlate>, this allows to better classify and keep track of the records.
-Values for **Type** are: *CORE*, *WORKLOAD*, *MASTER*
-Values for **Role** are : *Admin*, *billing*, *developer*, *readonly*, *security*
+- Values for **Type** are: *CORE*, *WORKLOAD*, *MASTER*
+- Values for **Role** are : *Admin*, *billing*, *developer*, *readonly*, *security*
 
 After the name, it will ask you to enter 0, 1 or 2, corresponding to the Landing Zone where the account name is deployed.
 
@@ -59,7 +60,7 @@ All files are stored in the *./results* folder
 
 To compare two snapshots you run the
 
-    **compareGuardrails.py**
+    compareGuardrails.py
 
 script. It assumes you are comparing snapshots associated to the same account and the same Landing Zone, otherwise the script will stop
 
@@ -74,7 +75,6 @@ If you enter a key other than y it will ask you the following questions:
 
 The script will parse the account name and try to find the corresponding json files in the *./results* directory. If it fails I will display a message and the program will end.
 
-Currently the comparison file is saved in the same folder where the script is running with the format 
-    *yyyymmdd_YYYMMDD_<Type><Role>LZ#.html*
+Currently the comparison file is saved in the same folder where the script is running with the format ***yyyymmdd_YYYMMDD_<Type><Role>LZ#.html***
 
 where *yyyymmdd* is the date for the older snapshot, *YYYYMMDD* is the date for the newer snapshot, *Type* and *Role* are the values extracted from the account name, and *#* is the Landing Zone number.
