@@ -37,7 +37,7 @@ newerSnapshotConfig=""
 olderSnapshotPolicies=""
 newerSnapshotPolicies=""
 
-print("Are the files located in a non-standard location? Any key other than y is understood as NO")
+print("Are the files located in a folder other than /results and/or the filenames are not standard? Any key other than y is understood as NO")
 Location=input()
 
 if Location=="y": # Case we search in a folder other than ./results and/or the files have non-standard names
@@ -336,16 +336,9 @@ if changeFlag==0:
     html=html+"<P>There have been no deleted in line Policies Embedded to IAM IAM Role</P>\n"
 
 
-
-
-
-
-
-
 html=html+"</body>\n"
 html=html+"</head>\n"
   
-with open('./comparisonReport.html', 'w') as f: #The report name is harcoded.
+with open('./'+ olderDate + '_' + newerDate + '_' + type + role + 'LZ' + LZ +'.html', 'w') as f: #The report name is harcoded.
     f.write(html)
     
-
