@@ -42,12 +42,13 @@ def getOutputApi(fileName,node):
         return output
 
     
-def closeResultsFile(resultsFile,awsAccountUsed):
+def closeResultsFile(resultsFile,awsAccountUsed,LZ):
     with open(resultsFile, 'a') as f:
         f.write('   \"TestInformation\": ' +' {\n')
         f.write('       \"DateTime\" : "' +str(datetime.datetime.now())+ '",\n')
         f.write('       \"awsAccountUsed\" : "' + awsAccountUsed + '",\n')
-        f.write('       \"AWS_DEFAULT_REGION\" : "' + os.environ.get('AWS_DEFAULT_REGION') + '"\n')
+        f.write('       \"AWS_DEFAULT_REGION\" : "' + os.environ.get('AWS_DEFAULT_REGION') + '",\n')
+        f.write('       \"Landing Zone\" : \"LZ' + str(LZ) + '"\n')
         f.write('   }\n')
         f.write('}')
         
@@ -103,6 +104,11 @@ def addHeader(title):
     html=html+ "    border-top: 8px solid #bbb;\n"
     html=html+ "    border-radius: 5px;\n"
     html=html+ "}\n"
+
+    html=html+ "table, th, td {\n"
+    html=html+ "border: 1px solid black;\n"
+    html=html+ "border-collapse: collapse;\n"
+    html=html+ "}\n"   
     html=html+ "</style>\n"
     
     html=html+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n"
@@ -124,4 +130,5 @@ def importJsonFile(jsonFile):
             return json_data
     except FileNotFoundError:
         print('\"'+ jsonFile + '\"' + 'not found')
+        quit()
     return   

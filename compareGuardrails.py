@@ -104,32 +104,33 @@ else: # Case we search in the ./results folder and the files names follow the st
     olderSnapshotConfig=suppFunct.importJsonFile("./results/"+olderSnapshotConfig)
     newerSnapshotConfig=suppFunct.importJsonFile("./results/"+newerSnapshotConfig)
     
-    #olderSnapshotPolicies=suppFunct.importJsonFile("./results/"+olderSnapshotPolicies)
-    #newerSnapshotPolicies=suppFunct.importJsonFile("./results/"+newerSnapshotPolicies)
-
-#print('Enter the name of the Configuration snapshot before the upgrade')
-#jsonFileBefore=input()
-#jsonFileBefore = jsonFileBefore if len(jsonFileBefore)>0 else "./resultsKeyParametersBefore.json"
-
-#olderSnapshotConfig=suppFunct.importJsonFile(jsonFileBefore)
-
-#print('Enter the name of the Configuration snapshot after the upgrade')
-#jsonFileAfter=input()
-#jsonFileAfter = jsonFileAfter if len(jsonFileAfter)>0 else "./resultsKeyParametersAfter.json"
+    olderSnapshotPolicies=suppFunct.importJsonFile("./results/"+olderSnapshotPolicies)
+    newerSnapshotPolicies=suppFunct.importJsonFile("./results/"+newerSnapshotPolicies)
 
 
-
-
-
-
-############################################################################################
-########   Comparing the files
-############################################################################################
+if olderSnapshotConfig["TestInformation"]["awsAccountUsed"]!=newerSnapshotConfig["TestInformation"]["awsAccountUsed"] or olderSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"]!=newerSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] or olderSnapshotConfig["TestInformation"]["Landing Zone"]!=newerSnapshotConfig["TestInformation"]["Landing Zone"]:
+    print("You are comparing the wrong snapshots, either the account, region or Landing Zone are not the same")
+    quit()
 
 
 title = "LZ2 Configuration comparison between " + olderSnapshotConfig["TestInformation"]["DateTime"]  + " and " + newerSnapshotConfig["TestInformation"]["DateTime"] #The title of the report
-
 html = suppFunct.addHeader(title)
+
+
+# Adding the test information
+html=html+ "<table><tr><th></th><th>Older Snapshot</th><th>Newer Snapshot</th></tr>"
+html=html+ "<td><B>Date/Time</B></td><td>"    + olderSnapshotConfig["TestInformation"]["DateTime"]           + "</td><td>" + newerSnapshotConfig["TestInformation"]["DateTime"]           + "</td></tr>"
+html=html+ "<td><B>Account</B></td><td>"      + olderSnapshotConfig["TestInformation"]["awsAccountUsed"]     + "</td><td>" + newerSnapshotConfig["TestInformation"]["awsAccountUsed"]     + "</td></tr>"
+html=html+ "<td><B>Region</B></td><td>"       + olderSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] + "</td><td>" + newerSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] + "</td></tr>"
+html=html+ "<td><B>Landing Zone</B></td><td>" + olderSnapshotConfig["TestInformation"]["Landing Zone"]       + "</td><td>" + newerSnapshotConfig["TestInformation"]["Landing Zone"]       + "</td></tr>"
+
+html=html+ "</tr></table>"
+
+html=html+ "<hr class=\"dashed\">\n"
+
+##########################################
+# Parsing and comparing the Config files
+##########################################
 
 html=html+ "<H2>LZ2 configuration values</H2>\n"
 
@@ -178,6 +179,11 @@ if olderSnapshotConfig["numberClusters"]!=newerSnapshotConfig["numberClusters"]:
 if olderSnapshotConfig["numberEC2Instances"]!=newerSnapshotConfig["numberEC2Instances"]:
     html=html+"<P>The number of <B>EC2 instances</B> associated to this account has changed from  : <B>" + str(olderSnapshotConfig["numberEC2Instances"])+ "</B> to <B>" + str(newerSnapshotConfig["numberEC2Instances"]) + "</B></P>\n"
     changeFlag=1  
+
+if olderSnapshotConfig["numberLambdaFunctions"]!=newerSnapshotConfig["numberLambdaFunctions"]:
+    html=html+"<P>The number of <B>Lambda Functions</B> associated to this account has changed from  : <B>" + str(olderSnapshotConfig["numberLambdaFunctions"])+ "</B> to <B>" + str(newerSnapshotConfig["numberLambdaFunctions"]) + "</B></P>\n"
+    changeFlag=1  
+
 
 if changeFlag==0:
     html=html+"<P>There have been no changes on the configuration values</P>\n"
@@ -248,6 +254,92 @@ for key,value in newerSnapshotConfig["OrganizationsInformation"].items():
 
 if changeFlag==0:
     html=html+"<P>No new organizations have been added</P>\n"
+
+
+
+html=html+ "<hr class=\"dashed\">\n"
+#########################################
+# Parsing and comparing the Policies files
+#########################################
+
+
+html=html+ "<H2>Policies</H2>\n"
+html=html+ "<H3>Managed Policies Attached to IAM Role</H3>\n"
+
+html=html+ "<H4>Managed Policies Attached to IAM Role changes</H4>\n"
+changeFlag=0 # Reset the flag
+for key,value in olderSnapshotPolicies.items():
+    if key in newerSnapshotPolicies and key.split("_",1)[0]=="managedPoliciesAttachedToIAMRole":
+        if olderSnapshotPolicies[key]!=newerSnapshotPolicies[key] and olderSnapshotPolicies[key]!="TestInformation":
+            html=html+"<P>The Managed Policies Attached to IAM Role <B>" + key.split("_",1)[1] + "</B> has changed from <I>" + str(olderSnapshotPolicies[key]) + "</I> to <I>" + str(newerSnapshotPolicies[key]) + "</I></P>\n"
+            changeFlag=1   
+            
+if changeFlag==0:
+    html=html+"<P>There have been no changes on any Managed Policies Attached to IAM Role</P>\n"
+
+
+html=html+ "<H4>New Managed Policies Attached to IAM Role</H4>\n"
+changeFlag=0 # Reset the flag
+for key,value in newerSnapshotPolicies.items():
+    if key not in olderSnapshotPolicies and key.split("_",1)[0]=="managedPoliciesAttachedToIAMRole" and newerSnapshotPolicies[key]!="TestInformation":
+        html=html+"<P>There is a new Managed Policies Attached to IAM Rolet <B>" + key.split("_",1)[1] + "</B> with <I>" + str(newerSnapshotPolicies[key]) + "</I> roles attached to it</P>\n"
+        changeFlag=1   
+            
+if changeFlag==0:
+    html=html+"<P>There are no new Managed Policies Attached to IAM Role</P>\n"
+
+
+html=html+ "<H4>Deleted Managed Policies Attached to IAM Role</H4>\n"
+changeFlag=0 # Reset the flag
+for key,value in olderSnapshotPolicies.items():
+    if key not in newerSnapshotPolicies and key.split("_",1)[0]=="managedPoliciesAttachedToIAMRole" and olderSnapshotPolicies[key]!="TestInformation":
+        html=html+"<P>The following Managed Policies Attached to IAM Rolet <B>" + key.split("_",1)[1] + "</B> has  been removed</P>\n"
+        changeFlag=1   
+            
+if changeFlag==0:
+    html=html+"<P>There have been no deleted  Managed Policies Attached to IAM Role</P>\n"
+
+
+html=html+ "<H3>In line Policies Embedded to IAM IAM Role</H3>\n"
+
+html=html+ "<H4>In line Policies Embedded to IAM IAM Role changes</H4>\n"
+changeFlag=0 # Reset the flag
+for key,value in olderSnapshotPolicies.items():
+    if key in newerSnapshotPolicies and key.split("_",1)[0]=="inlinePoliciesEmbeddedToIamRole":
+        if olderSnapshotPolicies[key]!=newerSnapshotPolicies[key] and olderSnapshotPolicies[key]!="TestInformation":
+            html=html+"<P>Thein line Policies Embedded to IAM IAM Role <B>" + key.split("_",1)[1] + "</B> has changed from <I>" + str(olderSnapshotPolicies[key]) + "</I> to <I>" + str(newerSnapshotPolicies[key]) + "</I></P>\n"
+            changeFlag=1   
+            
+if changeFlag==0:
+    html=html+"<P>There have been no changes in line Policies Embedded to IAM IAM Role</P>\n"
+
+
+html=html+ "<H4>New Managed Policies Attached to IAM Role</H4>\n"
+changeFlag=0 # Reset the flag
+for key,value in newerSnapshotPolicies.items():
+    if key not in olderSnapshotPolicies and key.split("_",1)[0]=="inlinePoliciesEmbeddedToIamRole" and newerSnapshotPolicies[key]!="TestInformation":
+        html=html+"<P>There is a new In line Policies Embedded to IAM IAM Role <B>" + key.split("_",1)[1] + "</B> with <I>" + str(newerSnapshotPolicies[key]) + "</I> roles attached to it</P>\n"
+        changeFlag=1   
+            
+if changeFlag==0:
+    html=html+"<P>There have been no new in line Policies Embedded to IAM IAM Role</P>\n"
+
+
+html=html+ "<H4>Deleted Managed Policies Attached to IAM Role</H4>\n"
+changeFlag=0 # Reset the flag
+for key,value in olderSnapshotPolicies.items():
+    if key not in newerSnapshotPolicies and key.split("_",1)[0]=="inlinePoliciesEmbeddedToIamRole" and olderSnapshotPolicies[key]!="TestInformation":
+        html=html+"<P>The following In line Policies Embedded to IAM IAM Role <B>" + key.split("_",1)[1] + "</B> has  been removed</P>\n"
+        changeFlag=1   
+            
+if changeFlag==0:
+    html=html+"<P>There have been no deleted in line Policies Embedded to IAM IAM Role</P>\n"
+
+
+
+
+
+
 
 
 html=html+"</body>\n"

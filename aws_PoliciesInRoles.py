@@ -77,9 +77,10 @@ def awsPoliciesInRoles(awsAccountUsed,resultsFile,LZ):
                 suppFunct.saveValues(resultsFile,suppFunct.addTab(suppFunct.addQuotes('inlinePoliciesEmbeddedToIamRole_'+myLine[0])),suppFunct.addQuotes('n/a'),False)
         
         policiesCounter+=1 
-        
-    with open(resultsFile, 'a') as f:
-        f.write('    ,\n')
+    
+    if   numberOfPolicies>0:    
+        with open(resultsFile, 'a') as f:
+            f.write('    ,\n')
 
     # Deleting auxiliary files
     suppFunct.delFile('./borrar.json')
@@ -88,7 +89,7 @@ def awsPoliciesInRoles(awsAccountUsed,resultsFile,LZ):
     suppFunct.delFile('./apiResults.json')
 
 
-    suppFunct.closeResultsFile(resultsFile,awsAccountUsed)
+    suppFunct.closeResultsFile(resultsFile,awsAccountUsed,LZ)
 
     convertToHTML.convertPoliciesRoles(resultsFile,LZ)
 

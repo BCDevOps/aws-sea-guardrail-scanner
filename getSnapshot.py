@@ -45,7 +45,7 @@ typeDic={"CORE":"core","core":"core", "MASTER":"master","master":"master","WORKL
 type=typeDic[userAccountSplit[1]]    
 
 
-roleDic={"admin":"Admin","billing":"Billing","developer":"Developer", "readonly":"Readonly","s":"SecurityAudit","security audit":"SecurityAudit"}  
+roleDic={"admin":"Admin","billing":"Billing","developer":"Developer", "readonly":"Readonly","security":"SecurityAudit"}  
 role=roleDic[userAccountSplit[2]]     
 
     

@@ -188,6 +188,6 @@ def awsConfigValues(awsAccountUsed,resultsFile,LZ):
     suppFunct.delFile('./apiResults.txt')
     suppFunct.delFile('./apiResults.json')
 
-    suppFunct.closeResultsFile(resultsFile,awsAccountUsed)
+    suppFunct.closeResultsFile(resultsFile,awsAccountUsed,LZ)
 
     convertToHTML.convertKeyParam(resultsFile,LZ)

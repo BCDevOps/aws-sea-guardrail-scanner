@@ -65,7 +65,7 @@ def convertKeyParam(resultsFile,LZ):
     jsn_list = jsonData['OrganizationsInformation']
     for key in jsn_list:
         if key !="numberOrganizationUnits":
-            html=html+"<LI><B>      " + key.split("_")[1] + "</B> : " + str(jsn_list[key]) + " </LI>\n"
+            html=html+"<LI><B>      " + key.split("_",1)[1] + "</B> : " + str(jsn_list[key]) + " </LI>\n"
     html=html+"</UL>"
     html=html+"</body>\n"
     html=html+"</head>\n"
@@ -94,7 +94,7 @@ def convertPoliciesRoles(resultsFile,LZ):
     #jsn_list = jsonData['S3Buckets_AccessPolicy']
     html=html+"<UL>"
     for key in jsonData:
-        mykey=key.split("_")
+        mykey=key.split("_",1)
         if mykey[0] =="managedPoliciesAttachedToIAMRole":
             html=html+"<LI><B>      " + mykey[1]+ "</B> : " + str(jsonData[key]) + " </LI>\n"
     html=html+"</UL>"
@@ -103,7 +103,7 @@ def convertPoliciesRoles(resultsFile,LZ):
     html=html+ "<H2>In Line Policies Embedded to IAM Role</H2>\n"
     html=html+"<UL>"
     for key in jsonData:
-        mykey=key.split("_")
+        mykey=key.split("_",1)
         if mykey[0] =="inlinePoliciesEmbeddedToIamRole":
             html=html+"<LI><B>      " + mykey[1] + "</B> : " + str(jsonData[key]) + " </LI>\n"
     html=html+"</UL>"
