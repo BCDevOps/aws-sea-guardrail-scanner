@@ -18,7 +18,7 @@ print("by exporting them into your terminal session")
 print("############################################################################################################")
 
 print("The following questions are used to create the name of the output files in the form")
-print("YYYMMDD_<type><Role><Config/Policies><LZ#>")
+print("YYYMMDD_<type><Role><Config/Policies>_<LicensePlate>_<LZ#>")
 print("############################################################################################################")
 print("")
 
@@ -34,6 +34,12 @@ while len(userAccount)!=0 and len(userAccountSplit)<4 :
         userAccount="BCGOV_MASTER_admin_tmhl5tvs"
     userAccountSplit=userAccount.split("_")
 
+LicensePlate=""
+print("Which License Plate-environment is using the previous base account? - If enter nothing will use  \"tmhl5tvs-dev\"")
+LicensePlate=input()
+if len(LicensePlate)==0:
+    userAccount="tmhl5tvs-dev"
+    
 
 LZ=""
 while LZ not in ["0","1","2"]:
@@ -50,12 +56,12 @@ role=roleDic[userAccountSplit[2]]
 
     
 currentDate = datetime.date.today().strftime("%Y%m%d")
-resultsConfigFile=currentDate + "_" + type + role + "ConfigLZ" + LZ + ".json"
-resultsPoliciesFile=currentDate + "_" + type + role + "PoliciesLZ" + LZ + ".json"
+resultsConfigFile=currentDate + "_" + type + role + "Config" + "_" + LicensePlate + "_" + "LZ" + LZ + ".json"
+resultsPoliciesFile=currentDate + "_" + type + role + "Policies" + "_" +  LicensePlate+ "_" + "LZ" + LZ + ".json"
 
 # Notice the folder where we save the results is hardcoded
-aws_ConfigValues.awsConfigValues(userAccount,"./results/"+resultsConfigFile,LZ)
-aws_PoliciesInRoles.awsPoliciesInRoles(userAccount,"./results/"+resultsPoliciesFile,LZ)
+aws_ConfigValues.awsConfigValues(userAccount,LicensePlate,"./results/"+resultsConfigFile,LZ)
+aws_PoliciesInRoles.awsPoliciesInRoles(userAccount,LicensePlate,"./results/"+resultsPoliciesFile,LZ)
 
 print("The following files have been created in the results folder:")
 print("-" + resultsConfigFile )
