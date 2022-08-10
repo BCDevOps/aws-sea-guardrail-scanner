@@ -31,7 +31,7 @@ On the command line, run
 The script will ask you for the name of the account you are checking. The AWS credentials must be associated to this account. By default it will use 
     *BCGOV_MASTER_admin_tmhl5tvs*
 
-Please, keep the format of the account name as BCGOV_<Type>_<Role>_<LicensePlate>, this allows to better classify and keep track of the records.
+Please, keep the format of the account name as BCGOV_Type_Role_LicensePlate, this allows to better classify and keep track of the records.
 - Values for **Type** are: *CORE*, *WORKLOAD*, *MASTER*
 - Values for **Role** are : *Admin*, *billing*, *developer*, *readonly*, *security*
 
@@ -65,9 +65,9 @@ To compare two snapshots you run the
 script. It assumes you are comparing snapshots associated to the same account and the same Landing Zone, otherwise the script will stop
 
 When you start the script it ask if the files are stored in a folder other than ./results and/or the file names do not follow the standard form described above.
-Enter y if you want to enter non-standard location/names for the files. It will ask first the name of the older file to compare with the newer one.
+Enter **y** if you want to enter non-standard location/names for the files. It will ask first the name of the older file to compare with the newer one.
 
-If you enter a key other than y it will ask you the following questions:
+If you enter a key other than **y** it will ask you the following questions:
 - Account name, but default will use *BCGOV_MASTER_admin_tmhl5tvs*
 - Number of the Landing Zone
 - Date in which the older snapshot was taken in *YYYMMDD* format
@@ -75,6 +75,6 @@ If you enter a key other than y it will ask you the following questions:
 
 The script will parse the account name and try to find the corresponding json files in the *./results* directory. If it fails I will display a message and the program will end.
 
-Currently the comparison file is saved in the same folder where the script is running with the format ***yyyymmdd_YYYMMDD_<Type><Role>LZ#.html***
+Currently the comparison file is saved in the same folder where the script is running with the format ***yyyymmdd_YYYMMDD_TypeRoleLZ#.html***
 
 where *yyyymmdd* is the date for the older snapshot, *YYYYMMDD* is the date for the newer snapshot, *Type* and *Role* are the values extracted from the account name, and *#* is the Landing Zone number.

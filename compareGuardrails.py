@@ -72,7 +72,12 @@ else: # Case we search in the ./results folder and the files names follow the st
             userAccount="BCGOV_MASTER_admin_tmhl5tvs"
         userAccountSplit=userAccount.split("_")
 
-
+    LicensePlate=""
+    print("Which License Plate-environment is using the previous base account? - If enter nothing will use  \"tmhl5tvs-dev\"")
+    LicensePlate=input()
+    if len(LicensePlate)==0:
+        userAccount="tmhl5tvs-dev"
+    
     LZ=""
     while LZ not in ["0","1","2"]:
         print('Which Landing zone LZ are you using 0/1/2')
@@ -95,11 +100,11 @@ else: # Case we search in the ./results folder and the files names follow the st
         print('Enter the date of the newer snapshot as YYYYMMDD')
         newerDate=input()  
    
-    olderSnapshotConfig=olderDate+ "_" + type + role + "ConfigLZ" + LZ + ".json"
-    newerSnapshotConfig=newerDate+ "_" + type + role + "ConfigLZ" + LZ + ".json"
+    olderSnapshotConfig=olderDate+ "_" + type + role + "Config" + "_" + LicensePlate + "_LZ" + LZ + ".json"
+    newerSnapshotConfig=newerDate+ "_" + type + role + "Config" + "_" + LicensePlate + "_LZ" +  LZ + ".json"
  
-    olderSnapshotPolicies=olderDate+ "_" + type + role + "PoliciesLZ" + LZ + ".json"
-    newerSnapshotPolicies=newerDate+ "_" + type + role + "PoliciesLZ" + LZ + ".json"   
+    olderSnapshotPolicies=olderDate+ "_" + type + role + "Policies" + "_" + LicensePlate + "_LZ" +  LZ + ".json"
+    newerSnapshotPolicies=newerDate+ "_" + type + role + "Policies" + "_" + LicensePlate + "_LZ" +  LZ + ".json"   
     
     olderSnapshotConfig=suppFunct.importJsonFile("./results/"+olderSnapshotConfig)
     newerSnapshotConfig=suppFunct.importJsonFile("./results/"+newerSnapshotConfig)
@@ -108,7 +113,7 @@ else: # Case we search in the ./results folder and the files names follow the st
     newerSnapshotPolicies=suppFunct.importJsonFile("./results/"+newerSnapshotPolicies)
 
 
-if olderSnapshotConfig["TestInformation"]["awsAccountUsed"]!=newerSnapshotConfig["TestInformation"]["awsAccountUsed"] or olderSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"]!=newerSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] or olderSnapshotConfig["TestInformation"]["Landing Zone"]!=newerSnapshotConfig["TestInformation"]["Landing Zone"]:
+if olderSnapshotConfig["TestInformation"]["awsAccountUsed"]!=newerSnapshotConfig["TestInformation"]["awsAccountUsed"] or olderSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"]!=newerSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] or olderSnapshotConfig["TestInformation"]["Landing Zone"]!=newerSnapshotConfig["TestInformation"]["Landing Zone"]or olderSnapshotConfig["TestInformation"]["LicensePlate"]!=newerSnapshotConfig["TestInformation"]["LicensePlate"]:
     print("You are comparing the wrong snapshots, either the account, region or Landing Zone are not the same")
     quit()
 
@@ -122,6 +127,7 @@ html=html+ "<table><tr><th></th><th>Older Snapshot</th><th>Newer Snapshot</th></
 html=html+ "<td><B>Date/Time</B></td><td>"    + olderSnapshotConfig["TestInformation"]["DateTime"]           + "</td><td>" + newerSnapshotConfig["TestInformation"]["DateTime"]           + "</td></tr>"
 html=html+ "<td><B>Account</B></td><td>"      + olderSnapshotConfig["TestInformation"]["awsAccountUsed"]     + "</td><td>" + newerSnapshotConfig["TestInformation"]["awsAccountUsed"]     + "</td></tr>"
 html=html+ "<td><B>Region</B></td><td>"       + olderSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] + "</td><td>" + newerSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] + "</td></tr>"
+html=html+ "<td><B>License Plate</B></td><td>" + olderSnapshotConfig["TestInformation"]["LicensePlate"]      + "</td><td>" + newerSnapshotConfig["TestInformation"]["LicensePlate"]       + "</td></tr>"
 html=html+ "<td><B>Landing Zone</B></td><td>" + olderSnapshotConfig["TestInformation"]["Landing Zone"]       + "</td><td>" + newerSnapshotConfig["TestInformation"]["Landing Zone"]       + "</td></tr>"
 
 html=html+ "</tr></table>"
@@ -339,6 +345,6 @@ if changeFlag==0:
 html=html+"</body>\n"
 html=html+"</head>\n"
   
-with open('./'+ olderDate + '_' + newerDate + '_' + type + role + 'LZ' + LZ +'.html', 'w') as f: #The report name is harcoded.
+with open('./'+ olderDate + '_' + newerDate + '_' + type + role + "_" + LicensePlate + "_LZ" + LZ + '.html', 'w') as f: #The report name is harcoded.
     f.write(html)
     
