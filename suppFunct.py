@@ -42,11 +42,11 @@ def getOutputApi(fileName,node):
         return output
 
     
-def closeResultsFile(resultsFile,LicensePlate,awsAccountUsed,LZ):
+def closeResultsFile(resultsFile,LicensePlate,awsRoleUsed,LZ):
     with open(resultsFile, 'a') as f:
         f.write('   \"TestInformation\": ' +' {\n')
         f.write('       \"DateTime\" : "' +str(datetime.datetime.now())+ '",\n')
-        f.write('       \"awsAccountUsed\" : "' + awsAccountUsed + '",\n')
+        f.write('       \"awsRoleUsed\" : "' + awsRoleUsed + '",\n')
         f.write('       \"AWS_DEFAULT_REGION\" : "' + os.environ.get('AWS_DEFAULT_REGION') + '",\n')
         f.write('       \"LicensePlate\" : "' + LicensePlate + '",\n')
         f.write('       \"Landing Zone\" : \"LZ' + str(LZ) + '"\n')

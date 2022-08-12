@@ -59,24 +59,40 @@ if Location=="y": # Case we search in a folder other than ./results and/or the f
         newerSnapshotConfig=suppFunct.importJsonFile(newerSnapshotConfig)
         olderSnapshotPolicies=suppFunct.importJsonFile(olderSnapshotPolicies)
         newerSnapshotPolicies=suppFunct.importJsonFile(newerSnapshotPolicies)
+        
+        
+    userRoleSplit=olderSnapshotConfig["TestInformation"]["awsRoleUsed"].split("_")
+    LicensePlate=olderSnapshotConfig["TestInformation"]["LicensePlate"]
+    LZ=olderSnapshotConfig["TestInformation"]["Landing Zone"][-1]
+    olderDate=olderSnapshotConfig["TestInformation"]["DateTime"].split(" ")[0].replace("-","")
+    newerDate=newerSnapshotConfig["TestInformation"]["DateTime"].split(" ")[0].replace("-","")
+    
+    
+    
+    typeDic={"CORE":"core","core":"core", "MASTER":"master","master":"master","WORKLOAD":"workload","workload":"workload"}
+    type=typeDic[userRoleSplit[1]] 
+    roleDic={"admin":"Admin","billing":"Billing","developer":"Developer", "readonly":"Readonly","s":"SecurityAudit","security audit":"SecurityAudit"}  
+    role=roleDic[userRoleSplit[2]]     
+    
     
 else: # Case we search in the ./results folder and the files names follow the standard YYYMMDD_<type><Role><Config/Policies><LZ#>
-    userAccount=" " #Notice the whitespace, so len is >0
-    userAccountSplit=[]
+    userRole=" " #Notice the whitespace, so len is >0
+    userRoleSplit=[]
 
-    while len(userAccount)!=0 and len(userAccountSplit)<4 :
+    while len(userRole)!=0 and len(userRoleSplit)<4 :
         print("Which AWS user account are you using? - If enter nothing will use  \"BCGOV_MASTER_admin_tmhl5tvs\"")
 
-        userAccount=input()
-        if len(userAccount)==0:
-            userAccount="BCGOV_MASTER_admin_tmhl5tvs"
-        userAccountSplit=userAccount.split("_")
+        userRole=input()
+        if len(userRole)==0:
+            userRole="BCGOV_MASTER_admin_tmhl5tvs"
+            
+        userRoleSplit=userRole.split("_")
 
     LicensePlate=""
     print("Which License Plate-environment is using the previous base account? - If enter nothing will use  \"tmhl5tvs-dev\"")
     LicensePlate=input()
     if len(LicensePlate)==0:
-        userAccount="tmhl5tvs-dev"
+        LicensePlate="tmhl5tvs-dev"
     
     LZ=""
     while LZ not in ["0","1","2"]:
@@ -84,11 +100,11 @@ else: # Case we search in the ./results folder and the files names follow the st
         LZ=input()
 
     typeDic={"CORE":"core","core":"core", "MASTER":"master","master":"master","WORKLOAD":"workload","workload":"workload"}
-    type=typeDic[userAccountSplit[1]]    
+    type=typeDic[userRoleSplit[1]]    
 
 
     roleDic={"admin":"Admin","billing":"Billing","developer":"Developer", "readonly":"Readonly","s":"SecurityAudit","security audit":"SecurityAudit"}  
-    role=roleDic[userAccountSplit[2]]     
+    role=roleDic[userRoleSplit[2]]     
 
     olderDate=""
     while len(olderDate) !=8:
@@ -113,19 +129,19 @@ else: # Case we search in the ./results folder and the files names follow the st
     newerSnapshotPolicies=suppFunct.importJsonFile("./results/"+newerSnapshotPolicies)
 
 
-if olderSnapshotConfig["TestInformation"]["awsAccountUsed"]!=newerSnapshotConfig["TestInformation"]["awsAccountUsed"] or olderSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"]!=newerSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] or olderSnapshotConfig["TestInformation"]["Landing Zone"]!=newerSnapshotConfig["TestInformation"]["Landing Zone"]or olderSnapshotConfig["TestInformation"]["LicensePlate"]!=newerSnapshotConfig["TestInformation"]["LicensePlate"]:
+if olderSnapshotConfig["TestInformation"]["awsRoleUsed"]!=newerSnapshotConfig["TestInformation"]["awsRoleUsed"] or olderSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"]!=newerSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] or olderSnapshotConfig["TestInformation"]["Landing Zone"]!=newerSnapshotConfig["TestInformation"]["Landing Zone"]or olderSnapshotConfig["TestInformation"]["LicensePlate"]!=newerSnapshotConfig["TestInformation"]["LicensePlate"]:
     print("You are comparing the wrong snapshots, either the account, region or Landing Zone are not the same")
     quit()
 
 
-title = "LZ2 Configuration comparison between " + olderSnapshotConfig["TestInformation"]["DateTime"]  + " and " + newerSnapshotConfig["TestInformation"]["DateTime"] #The title of the report
+title = "LZ" + LZ + " Configuration comparison between " + olderSnapshotConfig["TestInformation"]["DateTime"]  + " and " + newerSnapshotConfig["TestInformation"]["DateTime"] #The title of the report
 html = suppFunct.addHeader(title)
 
 
 # Adding the test information
 html=html+ "<table><tr><th></th><th>Older Snapshot</th><th>Newer Snapshot</th></tr>"
 html=html+ "<td><B>Date/Time</B></td><td>"    + olderSnapshotConfig["TestInformation"]["DateTime"]           + "</td><td>" + newerSnapshotConfig["TestInformation"]["DateTime"]           + "</td></tr>"
-html=html+ "<td><B>Account</B></td><td>"      + olderSnapshotConfig["TestInformation"]["awsAccountUsed"]     + "</td><td>" + newerSnapshotConfig["TestInformation"]["awsAccountUsed"]     + "</td></tr>"
+html=html+ "<td><B>Role</B></td><td>"      + olderSnapshotConfig["TestInformation"]["awsRoleUsed"]     + "</td><td>" + newerSnapshotConfig["TestInformation"]["awsRoleUsed"]     + "</td></tr>"
 html=html+ "<td><B>Region</B></td><td>"       + olderSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] + "</td><td>" + newerSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] + "</td></tr>"
 html=html+ "<td><B>License Plate</B></td><td>" + olderSnapshotConfig["TestInformation"]["LicensePlate"]      + "</td><td>" + newerSnapshotConfig["TestInformation"]["LicensePlate"]       + "</td></tr>"
 html=html+ "<td><B>Landing Zone</B></td><td>" + olderSnapshotConfig["TestInformation"]["Landing Zone"]       + "</td><td>" + newerSnapshotConfig["TestInformation"]["Landing Zone"]       + "</td></tr>"
@@ -138,36 +154,36 @@ html=html+ "<hr class=\"dashed\">\n"
 # Parsing and comparing the Config files
 ##########################################
 
-html=html+ "<H2>LZ2 configuration values</H2>\n"
+html=html+ "<H2>LZ" + LZ + " configuration values</H2>\n"
 
 changeFlag=0
 if olderSnapshotConfig["awsNumberIamUsers"]!=newerSnapshotConfig["awsNumberIamUsers"]:
-    html=html+"<P>The number of <B>AWS IAM users</B> in LZ2 has changed from : <B>" + str(olderSnapshotConfig["awsNumberIamUsers"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberIamUsers"]) + "</B></P>\n"
+    html=html+"<P>The number of <B>AWS IAM users</B> in LZ" + LZ + "  has changed from : <B>" + str(olderSnapshotConfig["awsNumberIamUsers"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberIamUsers"]) + "</B></P>\n"
     changeFlag=1
     
 if olderSnapshotConfig["awsNumberIamUsers"]!=newerSnapshotConfig["awsNumberIamUsers"]:
-    html=html+"<P>The number of <B>AWS IAM groups</B> in LZ2 has changed from : <B>" + str(olderSnapshotConfig["awsNumberIamUsers"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberIamUsers"]) + "</B></P>\n"
+    html=html+"<P>The number of <B>AWS IAM groups</B> in LZ" + LZ + "  has changed from : <B>" + str(olderSnapshotConfig["awsNumberIamUsers"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberIamUsers"]) + "</B></P>\n"
     changeFlag=1
 
 if olderSnapshotConfig["awsNumberIamRoles"]!=newerSnapshotConfig["awsNumberIamRoles"]:
-    html=html+"<P>The number of <B>AWS IAM roles</B> in LZ2 has changed from: <B>" + str(olderSnapshotConfig["awsNumberIamRoles"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberIamRoles"]) + "</B></P>\n"
+    html=html+"<P>The number of <B>AWS IAM roles</B> in LZ" + LZ + "  has changed from: <B>" + str(olderSnapshotConfig["awsNumberIamRoles"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberIamRoles"]) + "</B></P>\n"
     changeFlag=1
 
 if olderSnapshotConfig["awsNumberIamPolicies"]!=newerSnapshotConfig["awsNumberIamPolicies"]:
-    html=html+"<P>The number of <B>AWS IAM policies</B> in LZ2 has changed from  : <B>" + str(olderSnapshotConfig["awsNumberIamPolicies"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberIamPolicies"]) + "</B></P>\n"
+    html=html+"<P>The number of <B>AWS IAM policies</B> in LZ" + LZ + "  has changed from  : <B>" + str(olderSnapshotConfig["awsNumberIamPolicies"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberIamPolicies"]) + "</B></P>\n"
     changeFlag=1
 
 
 if olderSnapshotConfig["awsNumberRoles"]!=newerSnapshotConfig["awsNumberRoles"]:
-    html=html+"<P>The number of <B>roles</B> associated to the user in LZ2 has changed from  : <B>" + str(olderSnapshotConfig["awsNumberRoles"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberRoles"]) + "</B></P>\n"
+    html=html+"<P>The number of <B>roles</B> associated to the user in LZ" + LZ + "  has changed from  : <B>" + str(olderSnapshotConfig["awsNumberRoles"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberRoles"]) + "</B></P>\n"
     changeFlag=1
 
 if olderSnapshotConfig["awsNumberAvailablePolicies"]!=newerSnapshotConfig["awsNumberAvailablePolicies"]:
-    html=html+"<P>The number of <B>Policies</B> available to the AWS account in LZ2 has changed from  : <B>" + str(olderSnapshotConfig["awsNumberAvailablePolicies"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberAvailablePolicies"]) + "</B></P>\n"
+    html=html+"<P>The number of <B>Policies</B> available to the AWS account in LZ" + LZ + "  has changed from  : <B>" + str(olderSnapshotConfig["awsNumberAvailablePolicies"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberAvailablePolicies"]) + "</B></P>\n"
     changeFlag=1
 
 if olderSnapshotConfig["awsTotalNumberAccounts"]!=newerSnapshotConfig["awsTotalNumberAccounts"]:
-    html=html+"<P>The number of <B>accounts</B> in LZ2 has changed from  : <B>" + str(olderSnapshotConfig["awsTotalNumberAccounts"])+ "</B> to <B>" + str(newerSnapshotConfig["awsTotalNumberAccounts"]) + "</B></P>\n"
+    html=html+"<P>The number of <B>accounts</B> in LZ" + LZ + "  has changed from  : <B>" + str(olderSnapshotConfig["awsTotalNumberAccounts"])+ "</B> to <B>" + str(newerSnapshotConfig["awsTotalNumberAccounts"]) + "</B></P>\n"
     changeFlag=1
 
 if olderSnapshotConfig["numberCloudfrontDistributions"]!=newerSnapshotConfig["numberCloudfrontDistributions"]:

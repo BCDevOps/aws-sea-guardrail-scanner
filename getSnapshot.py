@@ -26,7 +26,7 @@ userAccount=" " #Notice the whitespace, so len is >0
 userAccountSplit=[]
 
 while len(userAccount)!=0 and len(userAccountSplit)<4 :
-    print("Which AWS user account are you using? - If enter nothing will use  \"BCGOV_MASTER_admin_tmhl5tvs\"")
+    print("Which AWS Role for account are you using? - If enter nothing will use  \"BCGOV_MASTER_admin_tmhl5tvs\"")
 
 
     userAccount=input()
@@ -35,7 +35,7 @@ while len(userAccount)!=0 and len(userAccountSplit)<4 :
     userAccountSplit=userAccount.split("_")
 
 LicensePlate=""
-print("Which License Plate-environment is using the previous base account? - If enter nothing will use  \"tmhl5tvs-dev\"")
+print("Which License Plate-environment (aka account) is using the role  entered above? - If enter nothing will use  \"tmhl5tvs-dev\"")
 LicensePlate=input()
 if len(LicensePlate)==0:
     userAccount="tmhl5tvs-dev"
