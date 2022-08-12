@@ -113,7 +113,7 @@ else: # Case we search in the ./results folder and the files names follow the st
     newerSnapshotPolicies=suppFunct.importJsonFile("./results/"+newerSnapshotPolicies)
 
 
-if olderSnapshotConfig["TestInformation"]["awsAccountUsed"]!=newerSnapshotConfig["TestInformation"]["awsAccountUsed"] or olderSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"]!=newerSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] or olderSnapshotConfig["TestInformation"]["Landing Zone"]!=newerSnapshotConfig["TestInformation"]["Landing Zone"]or olderSnapshotConfig["TestInformation"]["LicensePlate"]!=newerSnapshotConfig["TestInformation"]["LicensePlate"]:
+if olderSnapshotConfig["TestInformation"]["awsRoleUsed"]!=newerSnapshotConfig["TestInformation"]["awsRoleUsed"] or olderSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"]!=newerSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] or olderSnapshotConfig["TestInformation"]["Landing Zone"]!=newerSnapshotConfig["TestInformation"]["Landing Zone"]or olderSnapshotConfig["TestInformation"]["LicensePlate"]!=newerSnapshotConfig["TestInformation"]["LicensePlate"]:
     print("You are comparing the wrong snapshots, either the account, region or Landing Zone are not the same")
     quit()
 
@@ -125,7 +125,7 @@ html = suppFunct.addHeader(title)
 # Adding the test information
 html=html+ "<table><tr><th></th><th>Older Snapshot</th><th>Newer Snapshot</th></tr>"
 html=html+ "<td><B>Date/Time</B></td><td>"    + olderSnapshotConfig["TestInformation"]["DateTime"]           + "</td><td>" + newerSnapshotConfig["TestInformation"]["DateTime"]           + "</td></tr>"
-html=html+ "<td><B>Account</B></td><td>"      + olderSnapshotConfig["TestInformation"]["awsAccountUsed"]     + "</td><td>" + newerSnapshotConfig["TestInformation"]["awsAccountUsed"]     + "</td></tr>"
+html=html+ "<td><B>Account</B></td><td>"      + olderSnapshotConfig["TestInformation"]["awsRoleUsed"]     + "</td><td>" + newerSnapshotConfig["TestInformation"]["awsRoleUsed"]     + "</td></tr>"
 html=html+ "<td><B>Region</B></td><td>"       + olderSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] + "</td><td>" + newerSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] + "</td></tr>"
 html=html+ "<td><B>License Plate</B></td><td>" + olderSnapshotConfig["TestInformation"]["LicensePlate"]      + "</td><td>" + newerSnapshotConfig["TestInformation"]["LicensePlate"]       + "</td></tr>"
 html=html+ "<td><B>Landing Zone</B></td><td>" + olderSnapshotConfig["TestInformation"]["Landing Zone"]       + "</td><td>" + newerSnapshotConfig["TestInformation"]["Landing Zone"]       + "</td></tr>"

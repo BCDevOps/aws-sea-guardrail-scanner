@@ -14,7 +14,7 @@ from os.path import exists
 #  AWS_DEFAULT_REGION
 
 
-def awsPoliciesInRoles(awsAccountUsed,LicensePlate,resultsFile,LZ):
+def awsPoliciesInRoles(awsRoleUsed,LicensePlate,resultsFile,LZ):
     suppFunct.checkExistCreate(resultsFile)
 
     ############################################################################################
@@ -89,7 +89,7 @@ def awsPoliciesInRoles(awsAccountUsed,LicensePlate,resultsFile,LZ):
     suppFunct.delFile('./apiResults.json')
 
 
-    suppFunct.closeResultsFile(resultsFile,LicensePlate,awsAccountUsed,LZ)
+    suppFunct.closeResultsFile(resultsFile,LicensePlate,awsRoleUsed,LZ)
 
     convertToHTML.convertPoliciesRoles(resultsFile,LZ)
 

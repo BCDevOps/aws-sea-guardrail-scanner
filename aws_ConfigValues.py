@@ -13,7 +13,7 @@ from os.path import exists
 #  AWS_DEFAULT_REGION
 
 
-def awsConfigValues(awsAccountUsed,LicensePlate,resultsFile,LZ):
+def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     suppFunct.checkExistCreate(resultsFile)
 
     ############################################################################################
@@ -188,6 +188,6 @@ def awsConfigValues(awsAccountUsed,LicensePlate,resultsFile,LZ):
     suppFunct.delFile('./apiResults.txt')
     suppFunct.delFile('./apiResults.json')
 
-    suppFunct.closeResultsFile(resultsFile,LicensePlate,awsAccountUsed,LZ)
+    suppFunct.closeResultsFile(resultsFile,LicensePlate,awsRoleUsed,LZ)
 
     convertToHTML.convertKeyParam(resultsFile,LZ)
