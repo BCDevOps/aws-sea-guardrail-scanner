@@ -59,24 +59,40 @@ if Location=="y": # Case we search in a folder other than ./results and/or the f
         newerSnapshotConfig=suppFunct.importJsonFile(newerSnapshotConfig)
         olderSnapshotPolicies=suppFunct.importJsonFile(olderSnapshotPolicies)
         newerSnapshotPolicies=suppFunct.importJsonFile(newerSnapshotPolicies)
+        
+        
+    userRoleSplit=olderSnapshotConfig["TestInformation"]["awsRoleUsed"].split("_")
+    LicensePlate=olderSnapshotConfig["TestInformation"]["LicensePlate"]
+    LZ=olderSnapshotConfig["TestInformation"]["Landing Zone"][-1]
+    olderDate=olderSnapshotConfig["TestInformation"]["DateTime"].split(" ")[0].replace("-","")
+    newerDate=newerSnapshotConfig["TestInformation"]["DateTime"].split(" ")[0].replace("-","")
+    
+    
+    
+    typeDic={"CORE":"core","core":"core", "MASTER":"master","master":"master","WORKLOAD":"workload","workload":"workload"}
+    type=typeDic[userRoleSplit[1]] 
+    roleDic={"admin":"Admin","billing":"Billing","developer":"Developer", "readonly":"Readonly","s":"SecurityAudit","security audit":"SecurityAudit"}  
+    role=roleDic[userRoleSplit[2]]     
+    
     
 else: # Case we search in the ./results folder and the files names follow the standard YYYMMDD_<type><Role><Config/Policies><LZ#>
-    userAccount=" " #Notice the whitespace, so len is >0
-    userAccountSplit=[]
+    userRole=" " #Notice the whitespace, so len is >0
+    userRoleSplit=[]
 
-    while len(userAccount)!=0 and len(userAccountSplit)<4 :
+    while len(userRole)!=0 and len(userRoleSplit)<4 :
         print("Which AWS user account are you using? - If enter nothing will use  \"BCGOV_MASTER_admin_tmhl5tvs\"")
 
-        userAccount=input()
-        if len(userAccount)==0:
-            userAccount="BCGOV_MASTER_admin_tmhl5tvs"
-        userAccountSplit=userAccount.split("_")
+        userRole=input()
+        if len(userRole)==0:
+            userRole="BCGOV_MASTER_admin_tmhl5tvs"
+            
+        userRoleSplit=userRole.split("_")
 
     LicensePlate=""
     print("Which License Plate-environment is using the previous base account? - If enter nothing will use  \"tmhl5tvs-dev\"")
     LicensePlate=input()
     if len(LicensePlate)==0:
-        userAccount="tmhl5tvs-dev"
+        LicensePlate="tmhl5tvs-dev"
     
     LZ=""
     while LZ not in ["0","1","2"]:
@@ -84,11 +100,11 @@ else: # Case we search in the ./results folder and the files names follow the st
         LZ=input()
 
     typeDic={"CORE":"core","core":"core", "MASTER":"master","master":"master","WORKLOAD":"workload","workload":"workload"}
-    type=typeDic[userAccountSplit[1]]    
+    type=typeDic[userRoleSplit[1]]    
 
 
     roleDic={"admin":"Admin","billing":"Billing","developer":"Developer", "readonly":"Readonly","s":"SecurityAudit","security audit":"SecurityAudit"}  
-    role=roleDic[userAccountSplit[2]]     
+    role=roleDic[userRoleSplit[2]]     
 
     olderDate=""
     while len(olderDate) !=8:
@@ -125,7 +141,7 @@ html = suppFunct.addHeader(title)
 # Adding the test information
 html=html+ "<table><tr><th></th><th>Older Snapshot</th><th>Newer Snapshot</th></tr>"
 html=html+ "<td><B>Date/Time</B></td><td>"    + olderSnapshotConfig["TestInformation"]["DateTime"]           + "</td><td>" + newerSnapshotConfig["TestInformation"]["DateTime"]           + "</td></tr>"
-html=html+ "<td><B>Account</B></td><td>"      + olderSnapshotConfig["TestInformation"]["awsRoleUsed"]     + "</td><td>" + newerSnapshotConfig["TestInformation"]["awsRoleUsed"]     + "</td></tr>"
+html=html+ "<td><B>Role</B></td><td>"      + olderSnapshotConfig["TestInformation"]["awsRoleUsed"]     + "</td><td>" + newerSnapshotConfig["TestInformation"]["awsRoleUsed"]     + "</td></tr>"
 html=html+ "<td><B>Region</B></td><td>"       + olderSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] + "</td><td>" + newerSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] + "</td></tr>"
 html=html+ "<td><B>License Plate</B></td><td>" + olderSnapshotConfig["TestInformation"]["LicensePlate"]      + "</td><td>" + newerSnapshotConfig["TestInformation"]["LicensePlate"]       + "</td></tr>"
 html=html+ "<td><B>Landing Zone</B></td><td>" + olderSnapshotConfig["TestInformation"]["Landing Zone"]       + "</td><td>" + newerSnapshotConfig["TestInformation"]["Landing Zone"]       + "</td></tr>"
