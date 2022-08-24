@@ -34,10 +34,9 @@ def convertKeyParam(resultsFile,LZ):
     html=html+ "<H2>LZ" + LZ + "</B> :  configuration values</H2>\n"
     html=html+"<P><B>Number of AWS IAM users in LZ" + LZ + "</B> : " + str(jsonData["awsNumberIamUsers"])+ " </P>\n"
     html=html+"<P><B>Number of AWS IAM groups in LZ" + LZ + "</B> : " + str(jsonData["awsNumberIamGroups"]) + " </P>\n"
-    html=html+"<P><B>Number of AWS IAM roles in LZ" + LZ + "</B> : " + str(jsonData["awsNumberIamRoles"]) + " </P>\n"
     html=html+"<P><B>Number of AWS IAM policies in LZ" + LZ + "</B> : " +str(jsonData["awsNumberIamPolicies"]) + " </P>\n"
 
-    html=html+"<P><B>Number of roles associated to the user in LZ" + LZ + "</B> : " + str(jsonData["awsNumberRoles"]) + " </P>\n"
+    html=html+"<P><B>Number of IAM roles associated to the user in LZ" + LZ + "</B> : " + str(jsonData["awsNumberIamRoles"]) + " </P>\n"
     html=html+"<P><B>Number of Policies available to the AWS account in LZ" + LZ + "</B> : " + str(jsonData["awsNumberAvailablePolicies"]) + " </P>\n"
     html=html+"<P><B>Number of accounts in LZ" + LZ + "</B> : " +str(jsonData["awsTotalNumberAccounts"]) + " </P>\n"
 
@@ -57,6 +56,45 @@ def convertKeyParam(resultsFile,LZ):
     for key in jsn_list:
         html=html+"<LI><B>      " + key + "</B> : " + jsn_list[key] + " </LI>\n"
     html=html+"</UL>"
+    
+    
+    
+    
+    
+    html=html+ "<hr class=\"dashed\">\n"
+    html=html+ "<H2>Roles for this account</H2>\n"
+    html=html+"<P><B>Number of roles for this account in LZ" + LZ + "</B> : " + str(jsonData["awsNumberRoles"]) + " </P>\n"
+ 
+    
+    html=html+ "<H3>List of Roles - <I>Role Name : Arn</I></H3>\n"
+    html=html+"<UL>"
+    jsn_list = jsonData['List_of_Roles_for_the_Account']
+    for key in jsn_list:
+        html=html+"<LI><B>      " + key + "</B> : " + jsn_list[key] + " </LI>\n"
+    html=html+"</UL>"
+    
+    
+    
+    
+    
+    
+    
+    
+    html=html+ "<hr class=\"dashed\">\n"
+    html=html+ "<H2>Task Definitions</H2>\n"
+    html=html+"<P><B>Number of task definitions associated to this LZ" + LZ + " account</B> : " +str(jsonData["numberOfTaskDefinition"]) + " </P>\n"
+    html=html+ "<H3>List of Tasks definitions Arns </H3>\n"
+   #html=html+ "<P>a n/a label means there is no policy associated to the S3 Bucket, by default, access is denied so there is no public access </P>\n"
+    html=html+"<UL>"
+    jsn_list = jsonData['TaskDefinitionArns']
+    for key in jsn_list:
+        html=html+"<LI><B>      " + key + "</B></LI>\n"
+    html=html+"</UL>"
+    
+    
+    
+    
+    
     
     html=html+ "<hr class=\"dashed\">\n"
     html=html+ "<H2>Organization Information</H2>\n"

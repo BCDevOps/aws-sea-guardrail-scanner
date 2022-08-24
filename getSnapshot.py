@@ -22,23 +22,23 @@ print("YYYMMDD_<type><Role><Config/Policies>_<LicensePlate>_<LZ#>")
 print("############################################################################################################")
 print("")
 
-userAccount=" " #Notice the whitespace, so len is >0
-userAccountSplit=[]
+awsRoleUsed=" " #Notice the whitespace, so len is >0
+awsRoleUsedSplit=[]
 
-while len(userAccount)!=0 and len(userAccountSplit)<4 :
+while len(awsRoleUsed)!=0 and len(awsRoleUsedSplit)<4 :
     print("Which AWS Role for account are you using? - If enter nothing will use  \"BCGOV_MASTER_admin_tmhl5tvs\"")
 
 
-    userAccount=input()
-    if len(userAccount)==0:
-        userAccount="BCGOV_MASTER_admin_tmhl5tvs"
-    userAccountSplit=userAccount.split("_")
+    awsRoleUsed=input()
+    if len(awsRoleUsed)==0:
+        awsRoleUsed="BCGOV_MASTER_admin_tmhl5tvs"
+    awsRoleUsedSplit=awsRoleUsed.split("_")
 
 LicensePlate=""
 print("Which License Plate-environment (aka account) is using the role  entered above? - If enter nothing will use  \"tmhl5tvs-dev\"")
 LicensePlate=input()
 if len(LicensePlate)==0:
-    userAccount="tmhl5tvs-dev"
+    LicensePlate="tmhl5tvs-dev"
     
 
 LZ=""
@@ -48,11 +48,11 @@ while LZ not in ["0","1","2"]:
 
 
 typeDic={"CORE":"core","core":"core", "MASTER":"master","master":"master","WORKLOAD":"workload","workload":"workload"}
-type=typeDic[userAccountSplit[1]]    
+type=typeDic[awsRoleUsedSplit[1]]    
 
 
 roleDic={"admin":"Admin","billing":"Billing","developer":"Developer", "readonly":"Readonly","security":"SecurityAudit"}  
-role=roleDic[userAccountSplit[2]]     
+role=roleDic[awsRoleUsedSplit[2]]     
 
     
 currentDate = datetime.date.today().strftime("%Y%m%d")
@@ -60,8 +60,8 @@ resultsConfigFile=currentDate + "_" + type + role + "Config" + "_" + LicensePlat
 resultsPoliciesFile=currentDate + "_" + type + role + "Policies" + "_" +  LicensePlate+ "_" + "LZ" + LZ + ".json"
 
 # Notice the folder where we save the results is hardcoded
-aws_ConfigValues.awsConfigValues(userAccount,LicensePlate,"./results/"+resultsConfigFile,LZ)
-aws_PoliciesInRoles.awsPoliciesInRoles(userAccount,LicensePlate,"./results/"+resultsPoliciesFile,LZ)
+aws_ConfigValues.awsConfigValues(awsRoleUsed,LicensePlate,"./results/"+resultsConfigFile,LZ)
+aws_PoliciesInRoles.awsPoliciesInRoles(awsRoleUsed,LicensePlate,"./results/"+resultsPoliciesFile,LZ)
 
 print("The following files have been created in the results folder:")
 print("-" + resultsConfigFile )

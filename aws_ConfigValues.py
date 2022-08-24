@@ -1,6 +1,6 @@
 
 import os
-
+import subprocess
 import suppFunct
 import convertToHTML
 from os.path import exists
@@ -99,9 +99,32 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     ##############################################
     # Checks the number of roles associated to the admin user in LZ2
     ##############################################    
-    os.system('aws iam  list-roles | jq \'.Roles | length\' > borrar.json')
-    output=suppFunct.getOutput('./borrar.json') 
-    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberRoles'),output, True)    
+    os.system('aws iam  list-roles  >  ./apiResults.txt')
+
+    os.system(' jq \'.Roles | length\' ./apiResults.txt > borrar.json')
+    numberOfRoles=suppFunct.getOutput('./borrar.json')
+    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberRoles'),numberOfRoles, True)    
+
+    with open(resultsFile, 'a') as f:
+        f.write(suppFunct.addTab(suppFunct.addQuotes('List_of_Roles_for_the_Account')) +' : {\n')
+    
+
+        for x in range(int(numberOfRoles)-1):
+            valueRoleName= subprocess.check_output('jq \'.Roles[' + str(x) + '].RoleName \'  ./apiResults.txt ', shell=True)
+            valueArn= subprocess.check_output('jq \'.Roles[' + str(x) + '].Arn \'  ./apiResults.txt ', shell=True)
+            value=valueRoleName.decode("utf-8").rstrip('\r\n')  + " : " + valueArn.decode("utf-8").rstrip('\r\n') +  ',\n'
+        
+            f.write(suppFunct.addTab(suppFunct.addTab(value)))
+
+        #Write the last role of the list
+        valueRoleName= subprocess.check_output('jq \'.Roles[' + str(int(numberOfRoles)-1) + '].RoleName \'  ./apiResults.txt ', shell=True)
+        valueArn= subprocess.check_output('jq \'.Roles[' + str(int(numberOfRoles)-1) + '].Arn \'  ./apiResults.txt ', shell=True)
+        value=valueRoleName.decode("utf-8").rstrip('\r\n')  + " : " + valueArn.decode("utf-8").rstrip('\r\n') +  '\n'
+        
+        f.write(suppFunct.addTab(suppFunct.addTab(value)))
+
+        f.write('    },\n') 
+
 
     ##############################################
     # Checks the number of Policies available to the AWS account in LZ2
@@ -184,9 +207,25 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     output=suppFunct.getOutput('./borrar.json') 
     suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberLambdaFunctions'),output,True)
 
+
+    ##############################################
+    # Check the number of tasks definitions
+    ##############################################  
+    os.system('aws ecs list-task-definitions > apiResults.json')
+    os.system(' jq \'.taskDefinitionArns | length \' apiResults.json > borrar.json')
+    
+    output=suppFunct.getOutput('./borrar.json') 
+    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberOfTaskDefinition'),output,True)
+
+    os.system(' jq \'.taskDefinitionArns \' apiResults.json > borrar.json')
+    output=suppFunct.getOutput('./borrar.json') 
+    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('TaskDefinitionArns'),output,True)          
+
     # Deleting auxiliary files
-    suppFunct.delFile('./apiResults.txt')
     suppFunct.delFile('./apiResults.json')
+    suppFunct.delFile('./apiResults.txt')
+    suppFunct.delFile('./borrar.json')
+   
 
     suppFunct.closeResultsFile(resultsFile,LicensePlate,awsRoleUsed,LZ)
 

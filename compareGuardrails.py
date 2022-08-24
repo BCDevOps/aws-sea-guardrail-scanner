@@ -80,7 +80,7 @@ else: # Case we search in the ./results folder and the files names follow the st
     userRoleSplit=[]
 
     while len(userRole)!=0 and len(userRoleSplit)<4 :
-        print("Which AWS user account are you using? - If enter nothing will use  \"BCGOV_MASTER_admin_tmhl5tvs\"")
+        print("Which AWS user ROLE are you using? - If enter nothing will use  \"BCGOV_MASTER_admin_tmhl5tvs\"")
 
         userRole=input()
         if len(userRole)==0:
@@ -174,9 +174,7 @@ if olderSnapshotConfig["awsNumberIamPolicies"]!=newerSnapshotConfig["awsNumberIa
     changeFlag=1
 
 
-if olderSnapshotConfig["awsNumberRoles"]!=newerSnapshotConfig["awsNumberRoles"]:
-    html=html+"<P>The number of <B>roles</B> associated to the user in LZ" + LZ + "  has changed from  : <B>" + str(olderSnapshotConfig["awsNumberRoles"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberRoles"]) + "</B></P>\n"
-    changeFlag=1
+
 
 if olderSnapshotConfig["awsNumberAvailablePolicies"]!=newerSnapshotConfig["awsNumberAvailablePolicies"]:
     html=html+"<P>The number of <B>Policies</B> available to the AWS account in LZ" + LZ + "  has changed from  : <B>" + str(olderSnapshotConfig["awsNumberAvailablePolicies"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberAvailablePolicies"]) + "</B></P>\n"
@@ -248,6 +246,53 @@ if changeFlag==0:
     html=html+"<P>No S3 buckets have been deleted</P>\n"
 
 
+
+######################################################################################
+
+
+################################## Roles
+
+html=html+ "<hr class=\"dashed\">\n"
+html=html+ "<H2>Roles</H2>\n"
+
+if olderSnapshotConfig["awsNumberRoles"]!=newerSnapshotConfig["awsNumberRoles"]:
+    html=html+"<P>The number of <B>roles</B> associated to the user in LZ" + LZ + "  has changed from  : <B>" + str(olderSnapshotConfig["awsNumberRoles"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberRoles"]) + "</B></P>\n"
+    changeFlag=1
+
+html=html+ "<H3>Roles changes: same name, but arn changes</H3>\n"
+
+changeFlag=0 # Reset the flag
+for key,value in olderSnapshotConfig["List_of_Roles_for_the_Account"].items():
+    if key in newerSnapshotConfig["List_of_Roles_for_the_Account"]:
+        if olderSnapshotConfig["List_of_Roles_for_the_Account"][key]!=newerSnapshotConfig["List_of_Roles_for_the_Account"][key]:
+            html=html+"<P>Role with Name <B>" + key + "</B> had the Arn changed from <I>" + olderSnapshotConfig["List_of_Roles_for_the_Account"][key] + "</I> to <I>" + newerSnapshotConfig["List_of_Roles_for_the_Account"][key] + "</I></P>\n"
+            changeFlag=1   
+            
+if changeFlag==0:
+    html=html+"<P>There have been no on the Arn associated to Roles</P>\n"
+
+html=html+ "<H3>New Roles</H3>\n"
+changeFlag=0 # Reset the flag
+for key,value in newerSnapshotConfig["List_of_Roles_for_the_Account"].items():
+    if key not in olderSnapshotConfig["List_of_Roles_for_the_Account"]:
+        html=html+"<P>There is a new Role with name <B>" + key + "</B> and Arn <B>" +  newerSnapshotConfig["List_of_Roles_for_the_Account"][key] +"</B></P>\n"
+        changeFlag=1   
+
+if changeFlag==0:
+    html=html+"<P>No new Roles have been added</P>\n"
+
+html=html+ "<H3>Deleted Roles</H3>\n"
+changeFlag=0 # Reset the flag
+for key,value in olderSnapshotConfig["List_of_Roles_for_the_Account"].items():
+    if key not in newerSnapshotConfig["List_of_Roles_for_the_Account"]:
+        html=html+"<P>The Role with name <B>" + key + "</B> has been deleted</P>\n"
+        changeFlag=1   
+
+if changeFlag==0:
+    html=html+"<P>No Roles have been deleted</P>\n"
+
+
+######################################################################################
 
 ################################## Organization Units
 html=html+ "<hr class=\"dashed\">\n"
@@ -329,14 +374,14 @@ changeFlag=0 # Reset the flag
 for key,value in olderSnapshotPolicies.items():
     if key in newerSnapshotPolicies and key.split("_",1)[0]=="inlinePoliciesEmbeddedToIamRole":
         if olderSnapshotPolicies[key]!=newerSnapshotPolicies[key] and olderSnapshotPolicies[key]!="TestInformation":
-            html=html+"<P>Thein line Policies Embedded to IAM IAM Role <B>" + key.split("_",1)[1] + "</B> has changed from <I>" + str(olderSnapshotPolicies[key]) + "</I> to <I>" + str(newerSnapshotPolicies[key]) + "</I></P>\n"
+            html=html+"<P>The in line Policies Embedded to IAM IAM Role <B>" + key.split("_",1)[1] + "</B> has changed from <I>" + str(olderSnapshotPolicies[key]) + "</I> to <I>" + str(newerSnapshotPolicies[key]) + "</I></P>\n"
             changeFlag=1   
             
 if changeFlag==0:
     html=html+"<P>There have been no changes in line Policies Embedded to IAM IAM Role</P>\n"
 
 
-html=html+ "<H4>New Managed Policies Attached to IAM Role</H4>\n"
+html=html+ "<H4>New Managed Policies Embedded to IAM IAM Role</H4>\n"
 changeFlag=0 # Reset the flag
 for key,value in newerSnapshotPolicies.items():
     if key not in olderSnapshotPolicies and key.split("_",1)[0]=="inlinePoliciesEmbeddedToIamRole" and newerSnapshotPolicies[key]!="TestInformation":
@@ -347,7 +392,7 @@ if changeFlag==0:
     html=html+"<P>There have been no new in line Policies Embedded to IAM IAM Role</P>\n"
 
 
-html=html+ "<H4>Deleted Managed Policies Attached to IAM Role</H4>\n"
+html=html+ "<H4>Deleted Policies Embedded to IAM IAM Role</H4>\n"
 changeFlag=0 # Reset the flag
 for key,value in olderSnapshotPolicies.items():
     if key not in newerSnapshotPolicies and key.split("_",1)[0]=="inlinePoliciesEmbeddedToIamRole" and olderSnapshotPolicies[key]!="TestInformation":
