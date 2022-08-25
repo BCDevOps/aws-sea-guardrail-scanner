@@ -213,6 +213,12 @@ if changeFlag==0:
 ################################## S3 Buckets
 html=html+ "<hr class=\"dashed\">\n"
 html=html+ "<H2>S3 Buckets</H2>\n"
+
+
+if olderSnapshotConfig["awsNumber_S3_Buckets"]!=newerSnapshotConfig["awsNumber_S3_Buckets"]:
+    html=html+"<P>The number of <B>S3 Buckets</B> associated to this account has changed from  : <B>" + str(olderSnapshotConfig["awsNumber_S3_Buckets"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumber_S3_Buckets"]) + "</B></P>\n"
+
+
 html=html+ "<H3>S3 Buckets policies change</H3>\n"
 
 changeFlag=0 # Reset the flag
@@ -247,9 +253,6 @@ if changeFlag==0:
 
 
 
-######################################################################################
-
-
 ################################## Roles
 
 html=html+ "<hr class=\"dashed\">\n"
@@ -259,7 +262,7 @@ if olderSnapshotConfig["awsNumberRoles"]!=newerSnapshotConfig["awsNumberRoles"]:
     html=html+"<P>The number of <B>roles</B> associated to the user in LZ" + LZ + "  has changed from  : <B>" + str(olderSnapshotConfig["awsNumberRoles"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberRoles"]) + "</B></P>\n"
     changeFlag=1
 
-html=html+ "<H3>Roles changes: same name, but arn changes</H3>\n"
+html=html+ "<H3>Roles changes: It keeps the same name, but arn has changed</H3>\n"
 
 changeFlag=0 # Reset the flag
 for key,value in olderSnapshotConfig["List_of_Roles_for_the_Account"].items():
@@ -292,7 +295,6 @@ if changeFlag==0:
     html=html+"<P>No Roles have been deleted</P>\n"
 
 
-######################################################################################
 
 ################################## Organization Units
 html=html+ "<hr class=\"dashed\">\n"
