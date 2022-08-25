@@ -97,7 +97,7 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
 
 
     ##############################################
-    # Checks the number of roles associated to the admin user in LZ2
+    # Checks the number of roles associated this user in LZ
     ##############################################    
     os.system('aws iam  list-roles  >  ./apiResults.txt')
 
@@ -200,12 +200,35 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     output=suppFunct.getOutput('./borrar.json') 
     suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberEC2Instances'),output,True)
 
+
     ##############################################
-    # Check the number of Lambda Functions   Note: This API returns a fair amount of information.We may want to capture it.
-    ##############################################  
-    os.system('aws lambda list-functions | jq \'.Functions | length \' > borrar.json')
-    output=suppFunct.getOutput('./borrar.json') 
-    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberLambdaFunctions'),output,True)
+    # Check the number of Lambda Functions associated to this user
+    ##############################################    
+    os.system('aws lambda list-functions   >  ./apiResults.txt')
+
+    os.system(' jq \'.Functions | length \' ./apiResults.txt > borrar.json')
+    numberLambdaFunc=suppFunct.getOutput('./borrar.json') 
+    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberLambdaFunctions'),numberLambdaFunc,True)   
+
+    with open(resultsFile, 'a') as f:
+        f.write(suppFunct.addTab(suppFunct.addQuotes('List_of_Lambda_Functions')) +' : {\n')
+    
+
+        for x in range(int(numberLambdaFunc)-1):
+            valueLambdaName= subprocess.check_output('jq \'.Functions[' + str(x) + '].FunctionName \'  ./apiResults.txt ', shell=True)
+            valueArn= subprocess.check_output('jq \'.Functions[' + str(x) + '].FunctionArn \'  ./apiResults.txt ', shell=True)
+            value=valueLambdaName.decode("utf-8").rstrip('\r\n')  + " : " + valueArn.decode("utf-8").rstrip('\r\n') +  ',\n'
+        
+            f.write(suppFunct.addTab(suppFunct.addTab(value)))
+
+        #Write the last role of the list
+        valueLambdaName= subprocess.check_output('jq \'.Functions[' + str(int(numberLambdaFunc)-1) + '].FunctionName \'  ./apiResults.txt ', shell=True)
+        valueArn= subprocess.check_output('jq \'.Functions[' + str(int(numberLambdaFunc)-1) + '].FunctionArn \'  ./apiResults.txt ', shell=True)
+        value=valueLambdaName.decode("utf-8").rstrip('\r\n')  + " : " + valueArn.decode("utf-8").rstrip('\r\n') +  '\n'
+        
+        f.write(suppFunct.addTab(suppFunct.addTab(value)))
+
+        f.write('    },\n') 
 
 
     ##############################################

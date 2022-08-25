@@ -200,14 +200,55 @@ if olderSnapshotConfig["numberEC2Instances"]!=newerSnapshotConfig["numberEC2Inst
     html=html+"<P>The number of <B>EC2 instances</B> associated to this account has changed from  : <B>" + str(olderSnapshotConfig["numberEC2Instances"])+ "</B> to <B>" + str(newerSnapshotConfig["numberEC2Instances"]) + "</B></P>\n"
     changeFlag=1  
 
-if olderSnapshotConfig["numberLambdaFunctions"]!=newerSnapshotConfig["numberLambdaFunctions"]:
-    html=html+"<P>The number of <B>Lambda Functions</B> associated to this account has changed from  : <B>" + str(olderSnapshotConfig["numberLambdaFunctions"])+ "</B> to <B>" + str(newerSnapshotConfig["numberLambdaFunctions"]) + "</B></P>\n"
-    changeFlag=1  
+
 
 
 if changeFlag==0:
     html=html+"<P>There have been no changes on the configuration values</P>\n"
     
+
+
+
+
+################################## Lambda Functions
+html=html+ "<hr class=\"dashed\">\n"
+html=html+ "<H2>Lambda Functions</H2>\n"
+
+if olderSnapshotConfig["numberLambdaFunctions"]!=newerSnapshotConfig["numberLambdaFunctions"]:
+    html=html+"<P>The number of <B>Lambda Functions</B> associated to this account has changed from  : <B>" + str(olderSnapshotConfig["numberLambdaFunctions"])+ "</B> to <B>" + str(newerSnapshotConfig["numberLambdaFunctions"]) + "</B></P>\n"
+
+
+html=html+ "<H3>Lambda functions with Arn change</H3>\n"
+
+changeFlag=0 # Reset the flag
+for key,value in olderSnapshotConfig["List_of_Lambda_Functions"].items():
+    if key in newerSnapshotConfig["List_of_Lambda_Functions"]:
+        if olderSnapshotConfig["List_of_Lambda_Functions"][key]!=newerSnapshotConfig["List_of_Lambda_Functions"][key]:
+            html=html+"<P>The Lambda Function <B>" + key + "</B> has changed from <I>" + olderSnapshotConfig["List_of_Lambda_Functions"][key] + "</I> to <I>" + newerSnapshotConfig["List_of_Lambda_Functions"][key] + "</I></P>\n"
+            changeFlag=1   
+            
+if changeFlag==0:
+    html=html+"<P>There have been no changes in any Lambda Function Arn</P>\n"
+
+html=html+ "<H3>New Lambda Functions</H3>\n"
+changeFlag=0 # Reset the flag
+for key,value in newerSnapshotConfig["List_of_Lambda_Functions"].items():
+    if key not in olderSnapshotConfig["List_of_Lambda_Functions"]:
+        html=html+"<P>There is a new Lambda Function <B>" + key + "</B> with Arn <B>" +  newerSnapshotConfig["List_of_Lambda_Functions"][key] +"</B></P>\n"
+        changeFlag=1   
+
+if changeFlag==0:
+    html=html+"<P>No new Lambda Functions have been added</P>\n"
+
+html=html+ "<H3>Deleted Lambda Functions</H3>\n"
+changeFlag=0 # Reset the flag
+for key,value in olderSnapshotConfig["List_of_Lambda_Functions"].items():
+    if key not in newerSnapshotConfig["List_of_Lambda_Functions"]:
+        html=html+"<P>The Lambda Function <B>" + key + "</B> has been deleted</P>\n"
+        changeFlag=1   
+
+if changeFlag==0:
+    html=html+"<P>No Lambda Functions have been deleted</P>\n"
 
 
 ################################## S3 Buckets

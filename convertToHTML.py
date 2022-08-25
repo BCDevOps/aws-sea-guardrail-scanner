@@ -44,7 +44,16 @@ def convertKeyParam(resultsFile,LZ):
     html=html+"<P><B>Number of Cloudfront Functions associated to this account</B> : " +str(jsonData["numberCloudfrontFunctions"]) + " </P>\n"
     html=html+"<P><B>Number of clusters associated to this account</B> : " +str(jsonData["numberClusters"]) + " </P>\n"
     html=html+"<P><B>Number of EC2 instances associated to this account</B> : " +str(jsonData["numberEC2Instances"]) + " </P>\n"    
+   
+    html=html+ "<hr class=\"dashed\">\n"
+    html=html+ "<H2>Lambda Functions</H2>\n"
     html=html+"<P><B>Number of Lambda functions associated to this account</B> : " +str(jsonData["numberLambdaFunctions"]) + " </P>\n"    
+    html=html+ "<H3>List of Lambda Functions- <I> Name : Arn</I></H3>\n"
+    html=html+"<UL>"
+    jsn_list = jsonData['List_of_Lambda_Functions']
+    for key in jsn_list:
+        html=html+"<LI><B>      " + key + "</B> : " + jsn_list[key] + " </LI>\n"
+    html=html+"</UL>"
 
     html=html+ "<hr class=\"dashed\">\n"
     html=html+ "<H2>S3 buckets values</H2>\n"
@@ -57,28 +66,15 @@ def convertKeyParam(resultsFile,LZ):
         html=html+"<LI><B>      " + key + "</B> : " + jsn_list[key] + " </LI>\n"
     html=html+"</UL>"
     
-    
-    
-    
-    
     html=html+ "<hr class=\"dashed\">\n"
     html=html+ "<H2>Roles for this account</H2>\n"
     html=html+"<P><B>Number of roles for this account in LZ" + LZ + "</B> : " + str(jsonData["awsNumberRoles"]) + " </P>\n"
- 
-    
     html=html+ "<H3>List of Roles - <I>Role Name : Arn</I></H3>\n"
     html=html+"<UL>"
     jsn_list = jsonData['List_of_Roles_for_the_Account']
     for key in jsn_list:
         html=html+"<LI><B>      " + key + "</B> : " + jsn_list[key] + " </LI>\n"
     html=html+"</UL>"
-    
-    
-    
-    
-    
-    
-    
     
     html=html+ "<hr class=\"dashed\">\n"
     html=html+ "<H2>Task Definitions</H2>\n"
@@ -90,11 +86,6 @@ def convertKeyParam(resultsFile,LZ):
     for key in jsn_list:
         html=html+"<LI><B>      " + key + "</B></LI>\n"
     html=html+"</UL>"
-    
-    
-    
-    
-    
     
     html=html+ "<hr class=\"dashed\">\n"
     html=html+ "<H2>Organization Information</H2>\n"
