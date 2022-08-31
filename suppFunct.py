@@ -131,5 +131,4 @@ def importJsonFile(jsonFile):
             return json_data
     except FileNotFoundError:
         print('\"'+ jsonFile + '\"' + 'not found')
-        quit()
-    return   
+        quit()   

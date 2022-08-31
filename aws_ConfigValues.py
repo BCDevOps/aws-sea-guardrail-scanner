@@ -1,6 +1,6 @@
 
 import os
-
+import subprocess
 import suppFunct
 import convertToHTML
 from os.path import exists
@@ -97,11 +97,34 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
 
 
     ##############################################
-    # Checks the number of roles associated to the admin user in LZ2
+    # Checks the number of roles associated this user in LZ
     ##############################################    
-    os.system('aws iam  list-roles | jq \'.Roles | length\' > borrar.json')
-    output=suppFunct.getOutput('./borrar.json') 
-    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberRoles'),output, True)    
+    os.system('aws iam  list-roles  >  ./apiResults.txt')
+
+    os.system(' jq \'.Roles | length\' ./apiResults.txt > borrar.json')
+    numberOfRoles=suppFunct.getOutput('./borrar.json')
+    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberRoles'),numberOfRoles, True)    
+
+    if numberOfRoles!='"n/a"':
+        with open(resultsFile, 'a') as f:
+            f.write(suppFunct.addTab(suppFunct.addQuotes('List_of_Roles_for_the_Account')) +' : {\n')
+        
+            for x in range(int(numberOfRoles)-1):
+                valueRoleName= subprocess.check_output('jq \'.Roles[' + str(x) + '].RoleName \'  ./apiResults.txt ', shell=True)
+                valueArn= subprocess.check_output('jq \'.Roles[' + str(x) + '].Arn \'  ./apiResults.txt ', shell=True)
+                value=valueRoleName.decode("utf-8").rstrip('\r\n')  + " : " + valueArn.decode("utf-8").rstrip('\r\n') +  ',\n'
+            
+                f.write(suppFunct.addTab(suppFunct.addTab(value)))
+
+            #Write the last role of the list
+            valueRoleName= subprocess.check_output('jq \'.Roles[' + str(int(numberOfRoles)-1) + '].RoleName \'  ./apiResults.txt ', shell=True)
+            valueArn= subprocess.check_output('jq \'.Roles[' + str(int(numberOfRoles)-1) + '].Arn \'  ./apiResults.txt ', shell=True)
+            value=valueRoleName.decode("utf-8").rstrip('\r\n')  + " : " + valueArn.decode("utf-8").rstrip('\r\n') +  '\n'
+            
+            f.write(suppFunct.addTab(suppFunct.addTab(value)))
+
+            f.write('    },\n') 
+
 
     ##############################################
     # Checks the number of Policies available to the AWS account in LZ2
@@ -111,13 +134,36 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberAvailablePolicies'),output, True)   
 
 
-
     ##############################################
     # Checks the number of accounts in LZ2
-    ##############################################
-    os.system('aws organizations list-accounts | jq \'.Accounts | length\' > borrar.json')
-    output=suppFunct.getOutput('./borrar.json')   
-    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsTotalNumberAccounts'),output,True)    
+    ##############################################  
+    os.system('aws organizations list-accounts    >  ./apiResults.txt')
+
+    os.system(' jq \'.Accounts  | length \' ./apiResults.txt > borrar.json')
+    numberAccounts=suppFunct.getOutput('./borrar.json') 
+    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsTotalNumberAccounts'),numberAccounts,True)   
+
+    if numberAccounts!='"n/a"':
+        with open(resultsFile, 'a') as f:
+            f.write(suppFunct.addTab(suppFunct.addQuotes('List_of_Accounts')) +' : {\n')
+        
+
+            for x in range(int(numberAccounts)-1):
+                valueAccountName= subprocess.check_output('jq \'.Accounts[' + str(x) + '].Name \'  ./apiResults.txt ', shell=True)
+                valueArn= subprocess.check_output('jq \'.Accounts[' + str(x) + '].Arn \'  ./apiResults.txt ', shell=True)
+                value=valueAccountName.decode("utf-8").rstrip('\r\n')  + " : " + valueArn.decode("utf-8").rstrip('\r\n') +  ',\n'
+            
+                f.write(suppFunct.addTab(suppFunct.addTab(value)))
+
+            #Write the last role of the list
+            valueAccountName= subprocess.check_output('jq \'.Accounts[' + str(int(numberAccounts)-1) + '].Name \'  ./apiResults.txt ', shell=True)
+            valueArn= subprocess.check_output('jq \'.Accounts[' + str(int(numberAccounts)-1) + '].Arn \'  ./apiResults.txt ', shell=True)
+            value=valueAccountName.decode("utf-8").rstrip('\r\n')  + " : " + valueArn.decode("utf-8").rstrip('\r\n') +  '\n'
+            
+            f.write(suppFunct.addTab(suppFunct.addTab(value)))
+
+            f.write('    },\n') 
+
 
     ##############################################
     # Using the list-organizational-units-for-parent   API
@@ -177,16 +223,56 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     output=suppFunct.getOutput('./borrar.json') 
     suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberEC2Instances'),output,True)
 
+
     ##############################################
-    # Check the number of Lambda Functions   Note: This API returns a fair amount of information.We may want to capture it.
+    # Check the number of Lambda Functions associated to this user
+    ##############################################    
+    os.system('aws lambda list-functions   >  ./apiResults.txt')
+
+    os.system(' jq \'.Functions | length \' ./apiResults.txt > borrar.json')
+    numberLambdaFunc=suppFunct.getOutput('./borrar.json') 
+    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberLambdaFunctions'),numberLambdaFunc,True)   
+
+    if numberLambdaFunc!='"n/a"':
+        with open(resultsFile, 'a') as f:
+            f.write(suppFunct.addTab(suppFunct.addQuotes('List_of_Lambda_Functions')) +' : {\n')
+        
+
+            for x in range(int(numberLambdaFunc)-1):
+                valueLambdaName= subprocess.check_output('jq \'.Functions[' + str(x) + '].FunctionName \'  ./apiResults.txt ', shell=True)
+                valueArn= subprocess.check_output('jq \'.Functions[' + str(x) + '].FunctionArn \'  ./apiResults.txt ', shell=True)
+                value=valueLambdaName.decode("utf-8").rstrip('\r\n')  + " : " + valueArn.decode("utf-8").rstrip('\r\n') +  ',\n'
+            
+                f.write(suppFunct.addTab(suppFunct.addTab(value)))
+
+            #Write the last role of the list
+            valueLambdaName= subprocess.check_output('jq \'.Functions[' + str(int(numberLambdaFunc)-1) + '].FunctionName \'  ./apiResults.txt ', shell=True)
+            valueArn= subprocess.check_output('jq \'.Functions[' + str(int(numberLambdaFunc)-1) + '].FunctionArn \'  ./apiResults.txt ', shell=True)
+            value=valueLambdaName.decode("utf-8").rstrip('\r\n')  + " : " + valueArn.decode("utf-8").rstrip('\r\n') +  '\n'
+            
+            f.write(suppFunct.addTab(suppFunct.addTab(value)))
+
+            f.write('    },\n') 
+
+
+    ##############################################
+    # Check the number of tasks definitions
     ##############################################  
-    os.system('aws lambda list-functions | jq \'.Functions | length \' > borrar.json')
+    os.system('aws ecs list-task-definitions > apiResults.json')
+    os.system(' jq \'.taskDefinitionArns | length \' apiResults.json > borrar.json')
+    
     output=suppFunct.getOutput('./borrar.json') 
-    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberLambdaFunctions'),output,True)
+    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberOfTaskDefinition'),output,True)
+
+    os.system(' jq \'.taskDefinitionArns \' apiResults.json > borrar.json')
+    output=suppFunct.getOutput('./borrar.json') 
+    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('TaskDefinitionArns'),output,True)          
 
     # Deleting auxiliary files
-    suppFunct.delFile('./apiResults.txt')
     suppFunct.delFile('./apiResults.json')
+    suppFunct.delFile('./apiResults.txt')
+    suppFunct.delFile('./borrar.json')
+   
 
     suppFunct.closeResultsFile(resultsFile,LicensePlate,awsRoleUsed,LZ)
 
