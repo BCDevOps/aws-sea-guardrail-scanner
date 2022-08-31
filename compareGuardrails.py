@@ -180,9 +180,6 @@ if olderSnapshotConfig["awsNumberAvailablePolicies"]!=newerSnapshotConfig["awsNu
     html=html+"<P>The number of <B>Policies</B> available to the AWS account in LZ" + LZ + "  has changed from  : <B>" + str(olderSnapshotConfig["awsNumberAvailablePolicies"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberAvailablePolicies"]) + "</B></P>\n"
     changeFlag=1
 
-if olderSnapshotConfig["awsTotalNumberAccounts"]!=newerSnapshotConfig["awsTotalNumberAccounts"]:
-    html=html+"<P>The number of <B>accounts</B> in LZ" + LZ + "  has changed from  : <B>" + str(olderSnapshotConfig["awsTotalNumberAccounts"])+ "</B> to <B>" + str(newerSnapshotConfig["awsTotalNumberAccounts"]) + "</B></P>\n"
-    changeFlag=1
 
 if olderSnapshotConfig["numberCloudfrontDistributions"]!=newerSnapshotConfig["numberCloudfrontDistributions"]:
     html=html+"<P>The number of <B>Cloudfront Distributions</B> associated to this account has changed from  : <B>" + str(olderSnapshotConfig["numberCloudfrontDistributions"])+ "</B> to <B>" + str(newerSnapshotConfig["numberCloudfrontDistributions"]) + "</B></P>\n"
@@ -200,14 +197,49 @@ if olderSnapshotConfig["numberEC2Instances"]!=newerSnapshotConfig["numberEC2Inst
     html=html+"<P>The number of <B>EC2 instances</B> associated to this account has changed from  : <B>" + str(olderSnapshotConfig["numberEC2Instances"])+ "</B> to <B>" + str(newerSnapshotConfig["numberEC2Instances"]) + "</B></P>\n"
     changeFlag=1  
 
-
-
-
 if changeFlag==0:
     html=html+"<P>There have been no changes on the configuration values</P>\n"
     
 
+################################## Accounts
+html=html+ "<hr class=\"dashed\">\n"
+html=html+ "<H2>Lambda Functions</H2>\n"
 
+if olderSnapshotConfig["awsTotalNumberAccounts"]!=newerSnapshotConfig["awsTotalNumberAccounts"]:
+    html=html+"<P>The number of <B>accounts</B> in LZ" + LZ + "  has changed from  : <B>" + str(olderSnapshotConfig["awsTotalNumberAccounts"])+ "</B> to <B>" + str(newerSnapshotConfig["awsTotalNumberAccounts"]) + "</B></P>\n"
+
+
+html=html+ "<H3>Account with Arn change</H3>\n"
+
+changeFlag=0 # Reset the flag
+for key,value in olderSnapshotConfig["List_of_Accounts"].items():
+    if key in newerSnapshotConfig["List_of_Accounts"]:
+        if olderSnapshotConfig["List_of_Accounts"][key]!=newerSnapshotConfig["List_of_Accounts"][key]:
+            html=html+"<P>The Account with name <B>" + key + "</B> has changed its Arn from <I>" + olderSnapshotConfig["List_of_Accounts"][key] + "</I> to <I>" + newerSnapshotConfig["List_of_Accounts"][key] + "</I></P>\n"
+            changeFlag=1   
+            
+if changeFlag==0:
+    html=html+"<P>There have been no changes in any Account Arn</P>\n"
+
+html=html+ "<H3>New Accounts</H3>\n"
+changeFlag=0 # Reset the flag
+for key,value in newerSnapshotConfig["List_of_Accounts"].items():
+    if key not in olderSnapshotConfig["List_of_Accounts"]:
+        html=html+"<P>There is a Account with name <B>" + key + "</B> and with Arn <B>" +  newerSnapshotConfig["List_of_Accounts"][key] +"</B></P>\n"
+        changeFlag=1   
+
+if changeFlag==0:
+    html=html+"<P>No new Accounts have been added</P>\n"
+
+html=html+ "<H3>Deleted Accounts</H3>\n"
+changeFlag=0 # Reset the flag
+for key,value in olderSnapshotConfig["List_of_Accounts"].items():
+    if key not in newerSnapshotConfig["List_of_Accounts"]:
+        html=html+"<P>The Account with name <B>" + key + "</B> has been deleted</P>\n"
+        changeFlag=1   
+
+if changeFlag==0:
+    html=html+"<P>No accounts have been deleted</P>\n"
 
 
 ################################## Lambda Functions
