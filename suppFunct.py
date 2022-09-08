@@ -2,6 +2,7 @@ import os
 import datetime
 import json
 from os.path import exists
+import subprocess
 
 ##############################################
 # Functions
@@ -21,7 +22,7 @@ def addQuotes(Value):
 def addTab(Value):
     return '   '+ Value     
 
-
+# To read files that contain a single piece of information
 def getOutput(fileName):
     if os.path.exists(fileName):
         fp = open(fileName, "r")
@@ -34,12 +35,23 @@ def getOutput(fileName):
             return "\"n/a\""
 
 
-def getOutputApi(fileName,node):
+def getOutputApi(fileName,node): # returns the length of a given key in a json file
     if os.path.exists(fileName):    
         os.system( ' jq \'.' + node + ' | length\' '+ fileName + ' > borrar.json')
         output=getOutput('./borrar.json')
         delFile('./borrar.json')
         return output
+
+
+
+def returnValue(fileName,key): #Returns the value of a given key in a json file
+    if os.path.exists(fileName):  
+        os.system( 'jq \'.' + key + '\'' + ' ./' + fileName + ' > borrar.json')
+        output=getOutput('./borrar.json')
+        delFile('./borrar.json')
+        return str(output).replace('"','').replace('\n','')
+
+
 
     
 def closeResultsFile(resultsFile,LicensePlate,awsRoleUsed,LZ):
@@ -132,3 +144,33 @@ def importJsonFile(jsonFile):
     except FileNotFoundError:
         print('\"'+ jsonFile + '\"' + 'not found')
         quit()   
+        
+        
+        
+def setCredentials(Credentials):
+   # print('*******************************')
+    
+    #print(os.environ)
+    
+    #print('*******************************') 
+    # cmd='export AWS_ACCESS_KEY_ID=' + eval(Credentials[0])
+    # os.system(cmd)
+    
+  # print('1--->'+os.environ.get('AWS_ACCESS_KEY_ID'))
+   # print('2--->'+os.getenv('AWS_ACCESS_KEY_ID')) 
+    
+       
+   # os.environ.setdefault('AWS_ACCESS_KEY_ID', str(eval(Credentials[0])))
+    os.environ["AWS_ACCESS_KEY_ID"] = str(Credentials[0])
+    os.environ["AWS_SECRET_ACCESS_KEY"] = str(Credentials[1])
+    os.environ["AWS_SESSION_TOKEN"] = str(Credentials[2])
+    caca1=os.environ.get('AWS_ACCESS_KEY_ID')
+    caca2=os.getenv('AWS_ACCESS_KEY_ID')
+    print('1--->'+caca1) 
+    print('2--->'+caca2) 
+      #  os.system('export AWS_ACCESS_KEY_ID=' + Credentials[0].replace('\"','').rstrip() + '\'')
+      #  os.system('export AWS_SECRET_ACCESS_KEY=' + Credentials[1].strip('\"').strip('\"').rstrip() + '\'')
+      #  os.system('export AWS_SESSION_TOKEN=' + Credentials[2].strip('\"').strip('\"').rstrip() + '\'')   
+    return
+        
+ 
