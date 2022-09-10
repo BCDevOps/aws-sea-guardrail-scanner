@@ -157,9 +157,7 @@ html=html+ "<hr class=\"dashed\">\n"
 html=html+ "<H2>LZ" + LZ + " configuration values</H2>\n"
 
 changeFlag=0
-if olderSnapshotConfig["awsNumberIamUsers"]!=newerSnapshotConfig["awsNumberIamUsers"]:
-    html=html+"<P>The number of <B>AWS IAM users</B> in LZ" + LZ + "  has changed from : <B>" + str(olderSnapshotConfig["awsNumberIamUsers"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberIamUsers"]) + "</B></P>\n"
-    changeFlag=1
+
     
 if olderSnapshotConfig["awsNumberIamUsers"]!=newerSnapshotConfig["awsNumberIamUsers"]:
     html=html+"<P>The number of <B>AWS IAM groups</B> in LZ" + LZ + "  has changed from : <B>" + str(olderSnapshotConfig["awsNumberIamUsers"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberIamUsers"]) + "</B></P>\n"
@@ -199,6 +197,64 @@ if olderSnapshotConfig["numberEC2Instances"]!=newerSnapshotConfig["numberEC2Inst
 
 if changeFlag==0:
     html=html+"<P>There have been no changes on the configuration values</P>\n"
+
+
+################################## AWS IAM Users
+html=html+ "<hr class=\"dashed\">\n"
+html=html+ "<H2>AWS IAM Users</H2>\n"
+
+if olderSnapshotConfig["awsNumberIamUsers"]!=newerSnapshotConfig["awsNumberIamUsers"]:
+    html=html+"<P>The number of <B>AWS IAM Users</B> in LZ" + LZ + "  has changed from  : <B>" + str(olderSnapshotConfig["awsNumberIamUsers"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberIamUsers"]) + "</B></P>\n"
+
+html=html+ "<H3>AWS IAM Users with Attached policies changes</H3>\n"
+
+changeFlag=0 # Reset the flag
+for key,value in olderSnapshotConfig["ListIAMUsers"].items():
+    if key in newerSnapshotConfig["ListIAMUsers"]:
+        if olderSnapshotConfig["ListIAMUsers"][key]!=newerSnapshotConfig["ListIAMUsers"][key]:
+            html=html+"<P>The AWS IAM User with name <B>" + key + "</B> has changed its Arn from <I>" + olderSnapshotConfig["ListIAMUsers"][key] + "</I> to <I>" + newerSnapshotConfig["ListIAMUsers"][key] + "</I></P>\n"
+            changeFlag=1   
+            
+if changeFlag==0:
+    html=html+"<P>There have been no changes in any AWS IAM Users Attached policies</P>\n"
+
+html=html+ "<H3>New AWS IAM Users</H3>\n"
+changeFlag=0 # Reset the flag
+for key,value in newerSnapshotConfig["ListIAMUsers"].items():
+    if key not in olderSnapshotConfig["ListIAMUsers"]:
+        html=html+"<P>There is a new AWS IAM User with name <B>" + key + "</B> and with Arn <B>" +  newerSnapshotConfig["ListIAMUsers"][key] +"</B></P>\n"
+        changeFlag=1   
+
+if changeFlag==0:
+    html=html+"<P>No new AWS IAM Users have been added</P>\n"
+
+html=html+ "<H3>Deleted AWS IAM Users</H3>\n"
+changeFlag=0 # Reset the flag
+for key,value in olderSnapshotConfig["ListIAMUsers"].items():
+    if key not in newerSnapshotConfig["ListIAMUsers"]:
+        html=html+"<P>The AWS IAM User with name <B>" + key + "</B> has been deleted</P>\n"
+        changeFlag=1   
+
+if changeFlag==0:
+    html=html+"<P>No AWS IAM Users have been deleted</P>\n"
+#@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 
 ################################## Accounts

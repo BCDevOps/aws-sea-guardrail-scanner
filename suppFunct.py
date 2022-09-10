@@ -8,7 +8,8 @@ import subprocess
 # Functions
 ##############################################
 
-def saveValues(fileName,Name,Value,flag):
+##### Save the key/value pair in a given json file
+def saveValues(fileName,Name,Value,flag): 
     with open(fileName, 'a') as f:
         if flag: #if true save with a comma at the end
             f.write('   '+ Name.rstrip('\r\n') + ' : ' +Value.rstrip('\r\n')+ ',\n')
@@ -22,7 +23,7 @@ def addQuotes(Value):
 def addTab(Value):
     return '   '+ Value     
 
-# To read files that contain a single piece of information
+##### To read files that contain a single piece of information
 def getOutput(fileName):
     if os.path.exists(fileName):
         fp = open(fileName, "r")
@@ -34,8 +35,8 @@ def getOutput(fileName):
         else:
             return "\"n/a\""
 
-
-def getOutputApi(fileName,node): # returns the length of a given key in a json file
+##### returns the length of a given key in a json file
+def getOutputApi(fileName,node): 
     if os.path.exists(fileName):    
         os.system( ' jq \'.' + node + ' | length\' '+ fileName + ' > borrar.json')
         output=getOutput('./borrar.json')
@@ -43,14 +44,13 @@ def getOutputApi(fileName,node): # returns the length of a given key in a json f
         return output
 
 
-
-def returnValue(fileName,key): #Returns the value of a given key in a json file
+##### Returns the value of a given key in a json file
+def returnValue(fileName,key): 
     if os.path.exists(fileName):  
         os.system( 'jq \'.' + key + '\'' + ' ./' + fileName + ' > borrar.json')
         output=getOutput('./borrar.json')
         delFile('./borrar.json')
         return str(output).replace('"','').replace('\n','')
-
 
 
     
@@ -146,31 +146,11 @@ def importJsonFile(jsonFile):
         quit()   
         
         
-        
-def setCredentials(Credentials):
-   # print('*******************************')
-    
-    #print(os.environ)
-    
-    #print('*******************************') 
-    # cmd='export AWS_ACCESS_KEY_ID=' + eval(Credentials[0])
-    # os.system(cmd)
-    
-  # print('1--->'+os.environ.get('AWS_ACCESS_KEY_ID'))
-   # print('2--->'+os.getenv('AWS_ACCESS_KEY_ID')) 
-    
-       
-   # os.environ.setdefault('AWS_ACCESS_KEY_ID', str(eval(Credentials[0])))
+##### Changes the values of the env variables for the AWS credentials        
+def setCredentials(Credentials):  
     os.environ["AWS_ACCESS_KEY_ID"] = str(Credentials[0])
     os.environ["AWS_SECRET_ACCESS_KEY"] = str(Credentials[1])
-    os.environ["AWS_SESSION_TOKEN"] = str(Credentials[2])
-    caca1=os.environ.get('AWS_ACCESS_KEY_ID')
-    caca2=os.getenv('AWS_ACCESS_KEY_ID')
-    print('1--->'+caca1) 
-    print('2--->'+caca2) 
-      #  os.system('export AWS_ACCESS_KEY_ID=' + Credentials[0].replace('\"','').rstrip() + '\'')
-      #  os.system('export AWS_SECRET_ACCESS_KEY=' + Credentials[1].strip('\"').strip('\"').rstrip() + '\'')
-      #  os.system('export AWS_SESSION_TOKEN=' + Credentials[2].strip('\"').strip('\"').rstrip() + '\'')   
+    os.environ["AWS_SESSION_TOKEN"] = str(Credentials[2]) 
     return
         
  

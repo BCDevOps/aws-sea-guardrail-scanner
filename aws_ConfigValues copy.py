@@ -29,54 +29,6 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     os.system('aws iam  get-account-authorization-details > apiResults.json')
     output=suppFunct.getOutputApi('./apiResults.json','UserDetailList') 
     suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberIamUsers'),output, True)   
-    numberIAMUsers=output.rstrip('\r\n') 
-    
-    ########################################################################
-    ########################################################################
-    
-  
-    #os.system(' jq \'.UserDetailList | length \' ./apiResults.txt > borrar.json')
-    #numberIAMUsers=suppFunct.getOutput('./borrar.json')
-   #suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberIamUsers'),numberIAMUsers, True)
-
-    if numberIAMUsers!='"n/a"':
-        with open(resultsFile, 'a') as f:
-            f.write(suppFunct.addTab(suppFunct.addQuotes('ListIAMUsers')) +' : {\n')
-        
-
-            for x in range(int(numberIAMUsers)-1):
-                valueIAMUserName= subprocess.check_output('jq \'.UserDetailList[' + str(x) + '].UserName \'  ./apiResults.json ', shell=True)
-                valueNumberAttachedPolicies= subprocess.check_output('jq \'.UserDetailList[' + str(x) + '].AttachedManagedPolicies | length \'  ./apiResults.json ', shell=True)
-                value=valueIAMUserName.decode("utf-8").rstrip('\r\n')  + " : " + valueNumberAttachedPolicies.decode("utf-8").rstrip('\r\n') +  ',\n'
-            
-                f.write(suppFunct.addTab(suppFunct.addTab(value)))
-
-            #Write the last role of the list
-            valueIAMUserName= subprocess.check_output('jq \'.UserDetailList[' + str(int(numberIAMUsers)-1)  + '].UserName \'  ./apiResults.json ', shell=True)
-            valueNumberAttachedPolicies= subprocess.check_output('jq \'.UserDetailList[' + str(int(numberIAMUsers)-1)  + '].AttachedManagedPolicies[] | length \'  ./apiResults.json ', shell=True)
-            value=valueIAMUserName.decode("utf-8").rstrip('\r\n')  + " : " + valueNumberAttachedPolicies.decode("utf-8").rstrip('\r\n') +  '\n'
-            
-            f.write(suppFunct.addTab(suppFunct.addTab(value)))
-
-            f.write('    },\n') 
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        ########################################################################
-        #########################################################################
-    
-    
     ##############################################
     # Checks the number of IAM groups inLZ2 Landing Zone (IAM > User Groups)
     ##############################################    
