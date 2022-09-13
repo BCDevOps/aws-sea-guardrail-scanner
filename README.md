@@ -1,8 +1,8 @@
 # aws-sea-guardrail-scanner
 
-The repo contains a set of scripts that:
-- Run a guardrails scan
-- Generate a json and html file
+The repo contains a set of scripts that allow:
+- Run a single guardrails scan
+- Run multiple guardrails scans
 - Compare json files to detect the differences creating a html report
 
 Running the script before and after an upgrade, and then running the comparison between these two scans will produce a report with the changes in the main parameters, roles and policies if any. The report needs to be checked manually to determine if changes are expected or not.
@@ -22,18 +22,22 @@ You need to have on your machine
 
 
 
-# Creating a Guardrails snapshot
+# Creating a single Guardrails snapshot
 
 On the command line, run
 
     getSnapshot.py
 
-The script will ask you for the name of the account you are checking. The AWS credentials must be associated to this account. By default it will use 
+The script will ask you for the name of the account defined by the License Plate and the role (actually, the KeyCloak role equivalent to a bundle of AWS roles) you are checking. The AWS credentials must be associated to this account. By default it will use 
     *BCGOV_MASTER_admin_tmhl5tvs*
 
-Please, keep the format of the account name as BCGOV_Type_Role_LicensePlate, this allows to better classify and keep track of the records.
+
+Please, keep the format of the account name as **BCGOV_Type_Role_LicensePlate**, this allows to better classify and keep track of the records.
 - Values for **Type** are: *CORE*, *WORKLOAD*, *MASTER*
 - Values for **Role** are : *Admin*, *billing*, *developer*, *readonly*, *security*
+
+Then it will ask you for the LicensePlate, by default will use **tmhl5tvs-dev**
+
 
 After the name, it will ask you to enter 0, 1 or 2, corresponding to the Landing Zone where the account name is deployed.
 
@@ -78,3 +82,25 @@ The script will parse the account name and try to find the corresponding json fi
 Currently the comparison file is saved in the same folder where the script is running with the format ***yyyymmdd_YYYMMDD_TypeRoleLZ#.html***
 
 where *yyyymmdd* is the date for the older snapshot, *YYYYMMDD* is the date for the newer snapshot, *Type* and *Role* are the values extracted from the account name, and *#* is the Landing Zone number.
+
+
+# Creating a multiple Guardrails snapshots
+In this case, you need to have in the same folder where you run the script the file **accountsToScan.json**. The first level nodes refers to the landing zone, and the other. Inside the LZ# node you have a second level with the Master account for the node, and then another node for all the secondary accounts you want to scan. A third level indicates the roles the Master account will assume as secondary account.
+
+Currently, we only scan the role **AWSCloudFormationStackSetExecutionRole** as it is the only role that has a trust relationship with the master account.
+
+As in the case of a single scan, it will save all the files in the ./results folder and the pattern will be 
+
+- YYYYMMDD_AWSCloudFormationStackSetExecutionRoleConfigLZ#.json
+- YYYYMMDD_AWSCloudFormationStackSetExecutionRoleConfigLZ#.html
+- YYYYMMDD_AWSCloudFormationStackSetExecutionRolePoliciesLZ#.json
+- YYYYMMDD_AWSCloudFormationStackSetExecutionRolePoliciesLZ#.html
+
+There are four files produce for every single aws role associated to and account in the  **accountsToScan.json** file.
+
+To run, fulfill the prerequisites plus have prepared the **accountsToScan.json** file in the same folder as the script
+
+On the command line, run
+
+    getFullSnapshot.py
+

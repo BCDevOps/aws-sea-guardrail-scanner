@@ -39,7 +39,7 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     #numberIAMUsers=suppFunct.getOutput('./borrar.json')
    #suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberIamUsers'),numberIAMUsers, True)
 
-    if numberIAMUsers!='"n/a"':
+    if numberIAMUsers!='"n/a"' and int(numberIAMUsers)>0:
         with open(resultsFile, 'a') as f:
             f.write(suppFunct.addTab(suppFunct.addQuotes('ListIAMUsers')) +' : {\n')
         

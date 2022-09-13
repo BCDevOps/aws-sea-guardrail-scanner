@@ -9,28 +9,25 @@
             "513114711595": {
                 "licensePlate":"f2u30s-tools",
                 "roles":[
-                    "BCGOV_WORKLOAD_admin_tmhl5tvs",
-                    "BCGOV_WORKLOAD_readonly_tmhl5tvs"
+                    "AWSCloudFormationStackSetExecutionRole"
                 ]
             },    
             "900136227765":{
                 "licensePlate":"f2u30s-dev",
                 "roles":[
-                    "BCGOV_WORKLOAD_admin_tmhl5tvs",
-                    "BCGOV_WORKLOAD_billing_viewer_tmhl5tvs"
+                    "AWSCloudFormationStackSetExecutionRole"
                 ]
             },
             "032091603982": {
                 "licensePlate":"ubwyx8-dev",
                 "roles":[
-                    "BCGOV_WORKLOAD_admin_tmhl5tvs",
-                    "BCGOV_WORKLOAD_developer_tmhl5tvs"
+                    "AWSCloudFormationStackSetExecutionRole"
                 ]
             },  
             "709720252926": {
                 "licensePlate":"ubwyx8-sandbox",
                 "roles":[
-                    "BCGOV_WORKLOAD_admin_tmhl5tvs"
+                    "AWSCloudFormationStackSetExecutionRole"
                 ]
             }
         }

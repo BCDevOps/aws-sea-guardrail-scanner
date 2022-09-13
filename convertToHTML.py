@@ -53,7 +53,7 @@ def convertKeyParam(resultsFile,LZ):
     html=html+ "<H2>AWS IAM users</H2>\n"
     html=html+"<P><B>Number of AWS IAM users in LZ" + LZ + "</B> : " + str(jsonData["awsNumberIamUsers"])+ " </P>\n"
     html=html+ "<H3>List of AWS IAM users - <I>Name : Number of attached policies</I></H3>\n"
-    if str(jsonData["awsNumberIamUsers"])!='n/a':
+    if str(jsonData["awsNumberIamUsers"])!='n/a' and int(jsonData["awsNumberIamUsers"])>0:
         html=html+"<UL>"
         jsn_list = jsonData['ListIAMUsers']
         for key in jsn_list:
@@ -153,7 +153,7 @@ def convertPoliciesRoles(resultsFile,LZ):
 
     html=html+ "<hr class=\"dashed\">\n"
 
-    html=html+ "<H2>Managed Policies Attached to IAM Role</H2>\n"
+    html=html+ "<H2>Managed Policies Attached to IAM Role (<I>Name : number</I>)</H2>\n"
     
     #jsn_list = jsonData['S3Buckets_AccessPolicy']
     html=html+"<UL>"
@@ -164,7 +164,7 @@ def convertPoliciesRoles(resultsFile,LZ):
     html=html+"</UL>"
     
     html=html+ "<hr class=\"dashed\">\n"
-    html=html+ "<H2>In Line Policies Embedded to IAM Role</H2>\n"
+    html=html+ "<H2>In Line Policies Embedded to IAM Role  (<I>Name : number</I>)</H2>\n"
     html=html+"<UL>"
     for key in jsonData:
         mykey=key.split("_",1)
