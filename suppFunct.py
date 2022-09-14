@@ -2,12 +2,14 @@ import os
 import datetime
 import json
 from os.path import exists
+import subprocess
 
 ##############################################
 # Functions
 ##############################################
 
-def saveValues(fileName,Name,Value,flag):
+##### Save the key/value pair in a given json file
+def saveValues(fileName,Name,Value,flag): 
     with open(fileName, 'a') as f:
         if flag: #if true save with a comma at the end
             f.write('   '+ Name.rstrip('\r\n') + ' : ' +Value.rstrip('\r\n')+ ',\n')
@@ -21,7 +23,7 @@ def addQuotes(Value):
 def addTab(Value):
     return '   '+ Value     
 
-
+##### To read files that contain a single piece of information
 def getOutput(fileName):
     if os.path.exists(fileName):
         fp = open(fileName, "r")
@@ -33,13 +35,23 @@ def getOutput(fileName):
         else:
             return "\"n/a\""
 
-
-def getOutputApi(fileName,node):
+##### returns the length of a given key in a json file
+def getOutputApi(fileName,node): 
     if os.path.exists(fileName):    
         os.system( ' jq \'.' + node + ' | length\' '+ fileName + ' > borrar.json')
         output=getOutput('./borrar.json')
         delFile('./borrar.json')
         return output
+
+
+##### Returns the value of a given key in a json file
+def returnValue(fileName,key): 
+    if os.path.exists(fileName):  
+        os.system( 'jq \'.' + key + '\'' + ' ./' + fileName + ' > borrar.json')
+        output=getOutput('./borrar.json')
+        delFile('./borrar.json')
+        return str(output).replace('"','').replace('\n','')
+
 
     
 def closeResultsFile(resultsFile,LicensePlate,awsRoleUsed,LZ):
@@ -132,3 +144,13 @@ def importJsonFile(jsonFile):
     except FileNotFoundError:
         print('\"'+ jsonFile + '\"' + 'not found')
         quit()   
+        
+        
+##### Changes the values of the env variables for the AWS credentials        
+def setCredentials(Credentials):  
+    os.environ["AWS_ACCESS_KEY_ID"] = str(Credentials[0])
+    os.environ["AWS_SECRET_ACCESS_KEY"] = str(Credentials[1])
+    os.environ["AWS_SESSION_TOKEN"] = str(Credentials[2]) 
+    return
+        
+ 
