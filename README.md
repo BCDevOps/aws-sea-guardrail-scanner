@@ -98,9 +98,50 @@ As in the case of a single scan, it will save all the files in the ./results fol
 
 There are four files produce for every single aws role associated to and account in the  **accountsToScan.json** file.
 
-To run, fulfill the prerequisites plus have prepared the **accountsToScan.json** file in the same folder as the script
+To run, fulfill the prerequisites plus have prepared the **accountsToScan.json** file in the same folder as the script. You can find the template for this file in this readme or in the Sharepoint/Teams CPF site.
 
 On the command line, run
 
     getFullSnapshot.py
 
+
+# accountsToScan.json Template
+
+
+{
+    "LZ1": {
+        "Master":{
+            "accountNumber" : "111111111111", 
+            "licensePlate" : "Master Account for the zone",
+            "role" : "XXXXXX_MASTER_admin_12345678"
+        },
+        "Accounts": {
+             "222222222222": {
+                "licensePlate":"123456-tools",
+                "roles":[
+                    "AWSRoleWithTrustRelationshipWithMaster_1"
+                ]
+            },    
+            "333333333333":{
+                "licensePlate":"123456-dev",
+                "roles":[
+                    "AWSRoleWithTrustRelationshipWithMaster_1",
+                    "AWSRoleWithTrustRelationshipWithMaster_3"
+                ]
+            },
+            "444444444444": {
+                "licensePlate":"234567-dev",
+                "roles":[
+                    "AWSRoleWithTrustRelationshipWithMaster_1"
+                ]
+            },  
+            "555555555555": {
+                "licensePlate":"234567-sandbox",
+                "roles":[
+                    "AWSRoleWithTrustRelationshipWithMaster_1",
+                    "AWSRoleWithTrustRelationshipWithMaster_2"
+                ]
+            }
+        }
+    }
+}
