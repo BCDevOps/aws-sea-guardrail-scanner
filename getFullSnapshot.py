@@ -6,7 +6,7 @@ import aws_ConfigValues
 import aws_PoliciesInRoles
 import suppFunct
 from os.path import exists
-#import numpy as np
+
 
 print("############################################################################################################")
 print("This script will create a snapshot of the SEA Guardrails. It required the AWS credentials for Master account of the zone")
@@ -58,8 +58,8 @@ resultsConfigFile=currentDate + "_" + type + role + "Config" + "_" + LicensePlat
 resultsPoliciesFile=currentDate + "_" + type + role + "Policies" + "_" +  LicensePlate+ "_" + "LZ" + LZ + ".json"
 
 # Notice the folder where we save the results is hardcoded
-#aws_ConfigValues.awsConfigValues(awsRoleUsed,LicensePlate,"./results/"+resultsConfigFile,LZ)
-#aws_PoliciesInRoles.awsPoliciesInRoles(awsRoleUsed,LicensePlate,"./results/"+resultsPoliciesFile,LZ)
+aws_ConfigValues.awsConfigValues(awsRoleUsed,LicensePlate,"./results/"+resultsConfigFile,LZ)
+aws_PoliciesInRoles.awsPoliciesInRoles(awsRoleUsed,LicensePlate,"./results/"+resultsPoliciesFile,LZ)
 
 print("The following files have been created in the results folder:")
 print("-" + resultsConfigFile )
