@@ -144,6 +144,7 @@ def importJsonFile(jsonFile):
     except FileNotFoundError:
         print('\"'+ jsonFile + '\"' + 'not found')
         quit()   
+
         
         
 ##### Changes the values of the env variables for the AWS credentials        
@@ -160,28 +161,33 @@ def compareFile(olderSnapshotConfigName,newerSnapshotConfigName,olderSnapshotPol
   
     # This function process two different kinds of files. 
     # The ones produced by getSnapshot.py (the "manual" snapshot) produces files like
-    #        20220829_workloadAdminConfig_f2u30s-dev_LZ1.html
+    #        20220829_workloadAdminConfig_f2u30s-dev_LZ1.json
     # while the files produced by getFullSnapshot.py (the "automated" snapshot)produces files like
-    #        20220913_AWSCloudFormationStackSetExecutionRole_Policies_f2u30s-tools_LZ1
-    if len(olderSnapshotConfig.split("_"))==4:
+    #        20220913_AWSCloudFormationStackSetExecutionRole_Policies_f2u30s-tools_LZ1.json
+    if len(olderSnapshotConfigName.split("_"))==4:
         # "Manual" snapshot
-        roleType=olderSnapshotConfig.split("_")[1]
-    elif  len(olderSnapshotConfig.split("_"))==5: 
+        roleType=olderSnapshotConfigName.split("_")[1]
+        LicensePlate=olderSnapshotConfigName.split("_")[2]
+    elif  len(olderSnapshotConfigName.split("_"))==5: 
         # "Automated" snapshot
-        roleType=olderSnapshotConfig.split("_")[1]+"_"+olderSnapshotConfig.split("_")[2]
+        roleType=olderSnapshotConfigName.split("_")[1]+"_"+olderSnapshotConfigName.split("_")[2]
+        LicensePlate=olderSnapshotConfigName.split("_")[3]
     else:
         print("The name of the file does not follow the standard format")
         quit()    
         
+
     
-    olderSnapshotConfig=suppFunct.importJsonFile("./results/"+olderSnapshotConfigName)
-    newerSnapshotConfig=suppFunct.importJsonFile("./results/"+newerSnapshotConfigName)
     
-    olderSnapshotPolicies=suppFunct.importJsonFile("./results/"+olderSnapshotPoliciesName)
-    newerSnapshotPolicies=suppFunct.importJsonFile("./results/"+newerSnapshotPoliciesName)
+    olderSnapshotConfig=importJsonFile("./results/"+olderSnapshotConfigName)
+    newerSnapshotConfig=importJsonFile("./results/"+newerSnapshotConfigName)
+    
+    olderSnapshotPolicies=importJsonFile("./results/"+olderSnapshotPoliciesName)
+    newerSnapshotPolicies=importJsonFile("./results/"+newerSnapshotPoliciesName)
 
     LZ=olderSnapshotConfig["TestInformation"]["Landing Zone"][-1]
-    
+    olderDate=olderSnapshotConfig["TestInformation"]["DateTime"].split(" ")[0].replace("-","")
+    newerDate=newerSnapshotConfig["TestInformation"]["DateTime"].split(" ")[0].replace("-","")
         
     if olderSnapshotConfig["TestInformation"]["awsRoleUsed"]!=newerSnapshotConfig["TestInformation"]["awsRoleUsed"] or olderSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"]!=newerSnapshotConfig["TestInformation"]["AWS_DEFAULT_REGION"] or olderSnapshotConfig["TestInformation"]["Landing Zone"]!=newerSnapshotConfig["TestInformation"]["Landing Zone"]or olderSnapshotConfig["TestInformation"]["LicensePlate"]!=newerSnapshotConfig["TestInformation"]["LicensePlate"]:
         print("You are comparing the wrong snapshots, either the account, region or Landing Zone are not the same")
@@ -189,7 +195,7 @@ def compareFile(olderSnapshotConfigName,newerSnapshotConfigName,olderSnapshotPol
 
 
     title = "LZ" + LZ + " Configuration comparison between " + olderSnapshotConfig["TestInformation"]["DateTime"]  + " and " + newerSnapshotConfig["TestInformation"]["DateTime"] #The title of the report
-    html = suppFunct.addHeader(title)
+    html = addHeader(title)
 
 
     # Adding the test information
@@ -213,8 +219,8 @@ def compareFile(olderSnapshotConfigName,newerSnapshotConfigName,olderSnapshotPol
     changeFlag=0
 
         
-    if olderSnapshotConfig["awsNumberIamUsers"]!=newerSnapshotConfig["awsNumberIamUsers"]:
-        html=html+"<P>The number of <B>AWS IAM groups</B> in LZ" + LZ + "  has changed from : <B>" + str(olderSnapshotConfig["awsNumberIamUsers"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberIamUsers"]) + "</B></P>\n"
+    if olderSnapshotConfig["awsNumberIamGroups"]!=newerSnapshotConfig["awsNumberIamGroups"]:
+        html=html+"<P>The number of <B>AWS IAM groups</B> in LZ" + LZ + "  has changed from : <B>" + str(olderSnapshotConfig["awsNumberIamGroups"])+ "</B> to <B>" + str(newerSnapshotConfig["awsNumberIamGroups"]) + "</B></P>\n"
         changeFlag=1
 
     if olderSnapshotConfig["awsNumberIamRoles"]!=newerSnapshotConfig["awsNumberIamRoles"]:
@@ -263,53 +269,42 @@ def compareFile(olderSnapshotConfigName,newerSnapshotConfigName,olderSnapshotPol
     html=html+ "<H3>AWS IAM Users with Attached policies changes</H3>\n"
 
     changeFlag=0 # Reset the flag
-    for key,value in olderSnapshotConfig["ListIAMUsers"].items():
-        if key in newerSnapshotConfig["ListIAMUsers"]:
-            if olderSnapshotConfig["ListIAMUsers"][key]!=newerSnapshotConfig["ListIAMUsers"][key]:
-                html=html+"<P>The AWS IAM User with name <B>" + key + "</B> has changed its Arn from <I>" + olderSnapshotConfig["ListIAMUsers"][key] + "</I> to <I>" + newerSnapshotConfig["ListIAMUsers"][key] + "</I></P>\n"
-                changeFlag=1   
-                
-    if changeFlag==0:
-        html=html+"<P>There have been no changes in any AWS IAM Users Attached policies</P>\n"
+    
+    if "ListIAMUsers" in olderSnapshotConfig:
+        for key,value in olderSnapshotConfig["ListIAMUsers"].items():
+            if key in newerSnapshotConfig["ListIAMUsers"]:
+                if olderSnapshotConfig["ListIAMUsers"][key]!=newerSnapshotConfig["ListIAMUsers"][key]:
+                    html=html+"<P>The AWS IAM User with name <B>" + key + "</B> has changed its Arn from <I>" + str(olderSnapshotConfig["ListIAMUsers"][key]) + "</I> to <I>" + str(newerSnapshotConfig["ListIAMUsers"][key]) + "</I></P>\n"
+                    changeFlag=1   
+                    
+        if changeFlag==0:
+            html=html+"<P>There have been no changes in any AWS IAM Users Attached policies</P>\n"
 
     html=html+ "<H3>New AWS IAM Users</H3>\n"
     changeFlag=0 # Reset the flag
-    for key,value in newerSnapshotConfig["ListIAMUsers"].items():
-        if key not in olderSnapshotConfig["ListIAMUsers"]:
-            html=html+"<P>There is a new AWS IAM User with name <B>" + key + "</B> and with Arn <B>" +  newerSnapshotConfig["ListIAMUsers"][key] +"</B></P>\n"
-            changeFlag=1   
+    
+    if "ListIAMUsers" in newerSnapshotConfig:
+        for key,value in newerSnapshotConfig["ListIAMUsers"].items():
+            if len(olderSnapshotConfig["ListIAMUsers"])>0 and key not in olderSnapshotConfig["ListIAMUsers"]:
+                html=html+"<P>There is a new AWS IAM User with name <B>" + key + "</B> and with Arn <B>" +  newerSnapshotConfig["ListIAMUsers"][key] +"</B></P>\n"
+                changeFlag=1   
 
     if changeFlag==0:
         html=html+"<P>No new AWS IAM Users have been added</P>\n"
 
     html=html+ "<H3>Deleted AWS IAM Users</H3>\n"
     changeFlag=0 # Reset the flag
-    for key,value in olderSnapshotConfig["ListIAMUsers"].items():
-        if key not in newerSnapshotConfig["ListIAMUsers"]:
-            html=html+"<P>The AWS IAM User with name <B>" + key + "</B> has been deleted</P>\n"
-            changeFlag=1   
+    if "ListIAMUsers" in olderSnapshotConfig:
+        for key,value in olderSnapshotConfig["ListIAMUsers"].items():
+            if "ListIAMUsers" in newerSnapshotConfig:
+                if len(newerSnapshotConfig["ListIAMUsers"])>0 and key not in newerSnapshotConfig["ListIAMUsers"]:
+                    html=html+"<P>The AWS IAM User with name <B>" + key + "</B> has been deleted</P>\n"
+                    changeFlag=1
+            else: changeFlag=1
 
     if changeFlag==0:
         html=html+"<P>No AWS IAM Users have been deleted</P>\n"
-    #@@@@@@@@@@@@@@@@@@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
 
     ################################## Accounts
     html=html+ "<hr class=\"dashed\">\n"
@@ -592,7 +587,7 @@ def compareFile(olderSnapshotConfigName,newerSnapshotConfigName,olderSnapshotPol
     html=html+"</head>\n"
     
 
-    with open('./'+ olderDate + '_' + newerDate + '_' + type + role + "_" + LicensePlate + "_LZ" + LZ+ '.html', 'w') as f: #The report name is harcoded.
+    with open('./'+ olderDate + '_' + newerDate + '_' + roleType + "_" + LicensePlate + "_LZ" + LZ+ '.html', 'w') as f: #The report name is harcoded.
         f.write(html)
         
     return

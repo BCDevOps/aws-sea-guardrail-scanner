@@ -54,8 +54,8 @@ role=roleDic[awsRoleUsedSplit[2]]
 
     
 currentDate = datetime.date.today().strftime("%Y%m%d")
-resultsConfigFile=currentDate + "_" + type + role + "Config" + "_" + LicensePlate + "_" + "LZ" + LZ + ".json"
-resultsPoliciesFile=currentDate + "_" + type + role + "Policies" + "_" +  LicensePlate+ "_" + "LZ" + LZ + ".json"
+resultsConfigFile=currentDate + "_" + masterRole+ "_Config_" + LicensePlate + "_LZ" + LZ + ".json"
+resultsPoliciesFile=currentDate + "_" + masterRole + "_Policies_" +  LicensePlate+ "_LZ" + LZ + ".json"
 
 # Notice the folder where we save the results is hardcoded
 aws_ConfigValues.awsConfigValues(awsRoleUsed,LicensePlate,"./results/"+resultsConfigFile,LZ)

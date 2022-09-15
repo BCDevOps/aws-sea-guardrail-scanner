@@ -5,7 +5,7 @@ import re
 from this import d
 import subprocess
 import datetime
-import compareGuardrails
+
 import aws_PoliciesInRoles
 import suppFunct
 from os.path import exists
@@ -39,10 +39,10 @@ resultsFiles = [f for f in os.listdir("./results") if os.path.isfile(os.path.joi
 r = re.compile(".*_LZ" + LZ + ".json")
 jsonFiles = list(filter(r.match, resultsFiles)) # Get all json files in the folder
 
-r = re.compile(".*_Config_")
+r = re.compile(".*Config_")
 configFiles = list(filter(r.match, jsonFiles)) # Get all json files in the folder
 
-r = re.compile(".*_Policies_")
+r = re.compile(".*Policies_")
 policyFiles = list(filter(r.match, jsonFiles)) # Get all json files in the folder
 
 
@@ -52,6 +52,8 @@ while len(configFiles)>2:
     r = re.compile(".*_"+ licensePlate +"_")
     workingFiles = list(filter(r.match, configFiles)) # Get all config files with the same license plate and sort them
     workingFiles.sort() #List of Config files with same license plate ordered by date
+    
+    x=0
     
     for x in range (len(workingFiles)-1):
         print("Compare " + str(workingFiles[x]) + " with "+ str(workingFiles[x+1]))
