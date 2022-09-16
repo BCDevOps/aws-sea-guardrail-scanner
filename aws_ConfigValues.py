@@ -38,11 +38,13 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     #os.system(' jq \'.UserDetailList | length \' ./apiResults.txt > borrar.json')
     #numberIAMUsers=suppFunct.getOutput('./borrar.json')
    #suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberIamUsers'),numberIAMUsers, True)
+
     with open(resultsFile, 'a') as f:
         f.write(suppFunct.addTab(suppFunct.addQuotes('ListIAMUsers')) +' : {\n')
         
         if numberIAMUsers!='"n/a"' and int(numberIAMUsers)>0:
-            
+           
+
             for x in range(int(numberIAMUsers)-1):
                 valueIAMUserName= subprocess.check_output('jq \'.UserDetailList[' + str(x) + '].UserName \'  ./apiResults.json ', shell=True)
                 valueNumberAttachedPolicies= subprocess.check_output('jq \'.UserDetailList[' + str(x) + '].AttachedManagedPolicies | length \'  ./apiResults.json ', shell=True)
@@ -58,8 +60,10 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
             f.write(suppFunct.addTab(suppFunct.addTab(value)))
 
             f.write('    },\n') 
+
                 
         else:  f.write('"no AWS IAM Users":"no AWS IAM Users"},\n')          
+
     
     ##############################################
     # Checks the number of IAM groups inLZ2 Landing Zone (IAM > User Groups)
@@ -135,6 +139,7 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
 
     os.system(' jq \'.Roles | length\' ./apiResults.txt > borrar.json')
     numberOfRoles=suppFunct.getOutput('./borrar.json')
+
     suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberRoles'),numberOfRoles, True)   
      
      
@@ -143,6 +148,7 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
         f.write(suppFunct.addTab(suppFunct.addQuotes('List_of_Roles_for_the_Account')) +' : {\n')
         
         if numberOfRoles!='"n/a"':
+
         
             for x in range(int(numberOfRoles)-1):
                 valueRoleName= subprocess.check_output('jq \'.Roles[' + str(x) + '].RoleName \'  ./apiResults.txt ', shell=True)
@@ -163,6 +169,7 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
         else:  f.write('"no roles":"no roles"},\n')  
 
 
+
     ##############################################
     # Checks the number of Policies available to the AWS account in LZ2
     ##############################################    
@@ -178,6 +185,7 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
 
     os.system(' jq \'.Accounts  | length \' ./apiResults.txt > borrar.json')
     numberAccounts=suppFunct.getOutput('./borrar.json') 
+
     suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsTotalNumberAccounts'),numberAccounts,True)  
      
     with open(resultsFile, 'a') as f:
@@ -185,6 +193,7 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
         
         if numberAccounts!='"n/a"':
         
+
             for x in range(int(numberAccounts)-1):
                 valueAccountName= subprocess.check_output('jq \'.Accounts[' + str(x) + '].Name \'  ./apiResults.txt ', shell=True)
                 valueArn= subprocess.check_output('jq \'.Accounts[' + str(x) + '].Arn \'  ./apiResults.txt ', shell=True)
@@ -200,8 +209,10 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
             f.write(suppFunct.addTab(suppFunct.addTab(value)))
 
             f.write('    },\n') 
+
                 
         else:  f.write('"no accounts":"no accounts"},\n')  
+
 
 
     ##############################################

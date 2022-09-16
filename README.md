@@ -96,6 +96,7 @@ As in the case of a single scan, it will save all the files in the ./results fol
 - YYYYMMDD_AWSCloudFormationStackSetExecutionRolePoliciesLZ#.json
 - YYYYMMDD_AWSCloudFormationStackSetExecutionRolePoliciesLZ#.html
 
+
 There are four files produce for every single aws role associated to and account in the  **accountsToScan.json** file, including snapshots for the master account.
 
 To run, fulfill the prerequisites plus have prepared the **accountsToScan.json** file in the same folder as the script. You can find the template for this file in this readme or in the Sharepoint/Teams CPF site (https://bcgov.sharepoint.com/:u:/t/01368-CPFScrumTeam/EV0O0Ne_ExRIocJXHb9Dq6oBdOs7RJQpH8H21t8nkLkZfA?e=wsOWiZ).
@@ -157,3 +158,4 @@ The produced files will only list the differences. However, due the structure of
         }
     }
 }
+
