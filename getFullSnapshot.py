@@ -54,12 +54,14 @@ role=roleDic[awsRoleUsedSplit[2]]
 
     
 currentDate = datetime.date.today().strftime("%Y%m%d")
+
 resultsConfigFile=currentDate + "_" + masterRole+ "_Config_" + LicensePlate + "_LZ" + LZ + ".json"
 resultsPoliciesFile=currentDate + "_" + masterRole + "_Policies_" +  LicensePlate+ "_LZ" + LZ + ".json"
 
 # Notice the folder where we save the results is hardcoded
 aws_ConfigValues.awsConfigValues(awsRoleUsed,LicensePlate,"./results/"+resultsConfigFile,LZ)
 aws_PoliciesInRoles.awsPoliciesInRoles(awsRoleUsed,LicensePlate,"./results/"+resultsPoliciesFile,LZ)
+
 
 print("The following files have been created in the results folder:")
 print("-" + resultsConfigFile )
