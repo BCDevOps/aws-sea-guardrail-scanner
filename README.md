@@ -110,10 +110,11 @@ On the command line, enter the AWS credentials for the Landing Zone master accou
 # Comparing multiple Guardrails snapshots
 The files produced at different times by getFullSnapshot.py are stored in the ./results folder (with root being the folder where you will run the script to compare the snapshots)
 
-To run the script
+Run the script
+
     compareAllGuardrails.py
 
-The script will request the number of the zone you want to compare. Then it will read the list of files in ,/results, group them by License Plate and sort them by date. It will compare and produce a file for consecutive dates
+The script will request the number of the Landing Zone that holds the accounts you want to compare. Then it will read the list of files in ,/results, group them by License Plate and sort them by date. It will compare and produce a file for consecutive dates
 
 The produced files will only list the differences. However, due the structure of the original JSON file, it will also generate lines indicated there are no changes (instead of writing nothing)
 
