@@ -146,7 +146,6 @@ def importJsonFile(jsonFile):
         quit()   
 
         
-        
 ##### Changes the values of the env variables for the AWS credentials        
 def setCredentials(Credentials):  
     os.environ["AWS_ACCESS_KEY_ID"] = str(Credentials[0])
@@ -154,6 +153,7 @@ def setCredentials(Credentials):
     os.environ["AWS_SESSION_TOKEN"] = str(Credentials[2]) 
     return
         
+
  
  
 ##### Function to compare the guardrails 
@@ -592,4 +592,4 @@ def compareFile(olderSnapshotConfigName,newerSnapshotConfigName,olderSnapshotPol
         
     return
                 
-                
+
