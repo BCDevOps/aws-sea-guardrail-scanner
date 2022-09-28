@@ -535,7 +535,7 @@ if changeFlag==0:
 
 
 html=html+"</body>\n"
-html=html+"</head>\n"
+html=html+"</html>\n"
   
 with open('./'+ olderDate + '_' + newerDate + '_' + type + role + "_" + LicensePlate + "_LZ" + LZ + '.html', 'w') as f: #The report name is harcoded.
     f.write(html)

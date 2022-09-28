@@ -33,12 +33,6 @@ def convertKeyParam(resultsFile,LZ):
 
     html=html+ "<H2>LZ" + LZ + "</B> :  configuration values</H2>\n"
     
-    
-    
-    
-    
-    
-    
     html=html+"<P><B>Number of AWS IAM groups in LZ" + LZ + "</B> : " + str(jsonData["awsNumberIamGroups"]) + " </P>\n"
     html=html+"<P><B>Number of AWS IAM policies in LZ" + LZ + "</B> : " +str(jsonData["awsNumberIamPolicies"]) + " </P>\n"
 
@@ -132,7 +126,7 @@ def convertKeyParam(resultsFile,LZ):
                 html=html+"<LI><B>      " + key.split("_",1)[1] + "</B> : " + str(jsn_list[key]) + " </LI>\n"
         html=html+"</UL>"
         html=html+"</body>\n"
-        html=html+"</head>\n"
+        html=html+"</html>\n"
   
     with open('./' + resultsFile.split('.')[1] + '.html', 'w') as f: 
         f.write(html)
@@ -173,7 +167,7 @@ def convertPoliciesRoles(resultsFile,LZ):
     html=html+"</UL>"
       
     html=html+"</body>\n"
-    html=html+"</head>\n"
+    html=html+"</html>\n"
   
     with open('./' + resultsFile.split('.')[1] + '.html', 'w') as f: 
         f.write(html)  
