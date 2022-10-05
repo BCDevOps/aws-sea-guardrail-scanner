@@ -24,43 +24,11 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     ##############################################
     # Using the get-account-authorization-details  API
     ##############################################
-    # Checks the number of AWS users with access to LZ Landing Zone (IAM > Users)
+    # Checks the number of AWS users with access to LZ2 Landing Zone (IAM > Users)
     ##############################################    
     os.system('aws iam  get-account-authorization-details > apiResults.json')
     output=suppFunct.getOutputApi('./apiResults.json','UserDetailList') 
     suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberIamUsers'),output, True)   
-    numberIAMUsers=output.rstrip('\r\n') 
-    
-    ########################################################################
-    ########################################################################
-    
-  
-    #os.system(' jq \'.UserDetailList | length \' ./apiResults.txt > borrar.json')
-    #numberIAMUsers=suppFunct.getOutput('./borrar.json')
-   #suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberIamUsers'),numberIAMUsers, True)
-    with open(resultsFile, 'a') as f:
-        f.write(suppFunct.addTab(suppFunct.addQuotes('ListIAMUsers')) +' : {\n')
-        
-        if numberIAMUsers!='"n/a"' and int(numberIAMUsers)>0:
-            
-            for x in range(int(numberIAMUsers)-1):
-                valueIAMUserName= subprocess.check_output('jq \'.UserDetailList[' + str(x) + '].UserName \'  ./apiResults.json ', shell=True)
-                valueNumberAttachedPolicies= subprocess.check_output('jq \'.UserDetailList[' + str(x) + '].AttachedManagedPolicies | length \'  ./apiResults.json ', shell=True)
-                value=valueIAMUserName.decode("utf-8").rstrip('\r\n')  + " : " + valueNumberAttachedPolicies.decode("utf-8").rstrip('\r\n') +  ',\n'
-            
-                f.write(suppFunct.addTab(suppFunct.addTab(value)))
-
-            #Write the last role of the list
-            valueIAMUserName= subprocess.check_output('jq \'.UserDetailList[' + str(int(numberIAMUsers)-1)  + '].UserName \'  ./apiResults.json ', shell=True)
-            valueNumberAttachedPolicies= subprocess.check_output('jq \'.UserDetailList[' + str(int(numberIAMUsers)-1)  + '].AttachedManagedPolicies | length \'  ./apiResults.json ', shell=True)
-            value=valueIAMUserName.decode("utf-8").rstrip('\r\n')  + " : " + valueNumberAttachedPolicies.decode("utf-8").rstrip('\r\n') +  '\n'
-            
-            f.write(suppFunct.addTab(suppFunct.addTab(value)))
-
-            f.write('    },\n') 
-                
-        else:  f.write('"no AWS IAM Users":"no AWS IAM Users"},\n')          
-    
     ##############################################
     # Checks the number of IAM groups inLZ2 Landing Zone (IAM > User Groups)
     ##############################################    
@@ -83,7 +51,7 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     suppFunct.delFile('./apiResults.json')
 
     ##############################################
-    # Checks the number of S3 Buckets associated to user in LZ
+    # Checks the number of S3 Buckets associated to the admin user in LZ2
     ##############################################    
     os.system('aws s3 ls > ./apiResults.txt')
 
@@ -135,14 +103,11 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
 
     os.system(' jq \'.Roles | length\' ./apiResults.txt > borrar.json')
     numberOfRoles=suppFunct.getOutput('./borrar.json')
-    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberRoles'),numberOfRoles, True)   
-     
-     
-     
-    with open(resultsFile, 'a') as f:
-        f.write(suppFunct.addTab(suppFunct.addQuotes('List_of_Roles_for_the_Account')) +' : {\n')
-        
-        if numberOfRoles!='"n/a"':
+    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberRoles'),numberOfRoles, True)    
+
+    if numberOfRoles!='"n/a"':
+        with open(resultsFile, 'a') as f:
+            f.write(suppFunct.addTab(suppFunct.addQuotes('List_of_Roles_for_the_Account')) +' : {\n')
         
             for x in range(int(numberOfRoles)-1):
                 valueRoleName= subprocess.check_output('jq \'.Roles[' + str(x) + '].RoleName \'  ./apiResults.txt ', shell=True)
@@ -159,8 +124,6 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
             f.write(suppFunct.addTab(suppFunct.addTab(value)))
 
             f.write('    },\n') 
-                
-        else:  f.write('"no roles":"no roles"},\n')  
 
 
     ##############################################
@@ -178,13 +141,13 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
 
     os.system(' jq \'.Accounts  | length \' ./apiResults.txt > borrar.json')
     numberAccounts=suppFunct.getOutput('./borrar.json') 
-    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsTotalNumberAccounts'),numberAccounts,True)  
-     
-    with open(resultsFile, 'a') as f:
-        f.write(suppFunct.addTab(suppFunct.addQuotes('List_of_Accounts')) +' : {\n')
+    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsTotalNumberAccounts'),numberAccounts,True)   
+
+    if numberAccounts!='"n/a"':
+        with open(resultsFile, 'a') as f:
+            f.write(suppFunct.addTab(suppFunct.addQuotes('List_of_Accounts')) +' : {\n')
         
-        if numberAccounts!='"n/a"':
-        
+
             for x in range(int(numberAccounts)-1):
                 valueAccountName= subprocess.check_output('jq \'.Accounts[' + str(x) + '].Name \'  ./apiResults.txt ', shell=True)
                 valueArn= subprocess.check_output('jq \'.Accounts[' + str(x) + '].Arn \'  ./apiResults.txt ', shell=True)
@@ -200,8 +163,6 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
             f.write(suppFunct.addTab(suppFunct.addTab(value)))
 
             f.write('    },\n') 
-                
-        else:  f.write('"no accounts":"no accounts"},\n')  
 
 
     ##############################################
@@ -270,13 +231,12 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
 
     os.system(' jq \'.Functions | length \' ./apiResults.txt > borrar.json')
     numberLambdaFunc=suppFunct.getOutput('./borrar.json') 
-    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberLambdaFunctions'),numberLambdaFunc,True)  
-     
-    with open(resultsFile, 'a') as f:
+    suppFunct.saveValues(resultsFile,suppFunct.addQuotes('numberLambdaFunctions'),numberLambdaFunc,True)   
+
+    if numberLambdaFunc!='"n/a"':
+        with open(resultsFile, 'a') as f:
+            f.write(suppFunct.addTab(suppFunct.addQuotes('List_of_Lambda_Functions')) +' : {\n')
         
-        f.write(suppFunct.addTab(suppFunct.addQuotes('List_of_Lambda_Functions')) +' : {\n')
-        
-        if numberLambdaFunc!='"n/a"':    
 
             for x in range(int(numberLambdaFunc)-1):
                 valueLambdaName= subprocess.check_output('jq \'.Functions[' + str(x) + '].FunctionName \'  ./apiResults.txt ', shell=True)
@@ -293,7 +253,6 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
             f.write(suppFunct.addTab(suppFunct.addTab(value)))
 
             f.write('    },\n') 
-        else:  f.write('"no lambda functions":"no lambda functions"},\n')  
 
 
     ##############################################
