@@ -46,7 +46,7 @@ r = re.compile(".*Policies_")
 policyFiles = list(filter(r.match, jsonFiles)) # Get all json files in the folder
 
 
-while len(configFiles)>2:
+while len(configFiles)>1:
     licensePlate=configFiles[0].split("_")[3]
     print("----->"+ licensePlate)
     r = re.compile(".*_"+ licensePlate +"_")
