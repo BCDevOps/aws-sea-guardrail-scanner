@@ -47,9 +47,10 @@ policyFiles = list(filter(r.match, jsonFiles)) # Get all json files in the folde
 
 
 while len(configFiles)>1:
-    licensePlate=configFiles[0].split("_")[3]
+    role=configFiles[0].split("_")[1] # Gets the role + config string
+    licensePlate=configFiles[0].split("_")[2] # Gets the license plate
     print("----->"+ licensePlate)
-    r = re.compile(".*_"+ licensePlate +"_")
+    r = re.compile(".*" + role +"_"+ licensePlate +"_")
     workingFiles = list(filter(r.match, configFiles)) # Get all config files with the same license plate and sort them
     workingFiles.sort() #List of Config files with same license plate ordered by date
     
@@ -65,7 +66,7 @@ while len(configFiles)>1:
 
         suppFunct.compareFile(olderSnapshotConfigName,newerSnapshotConfigName,olderSnapshotPoliciesName,newerSnapshotPoliciesName)
         
-        configFiles.remove(workingFiles[x])
+        #configFiles.remove(workingFiles[x])
         x=x+1
         
     configFiles.remove(workingFiles[x])
