@@ -1,0 +1,90 @@
+{
+    "LZ0": {
+        "Master":{
+            "accountNumber" : "238807864036", 
+            "licensePlate" : "Province of British Columbia",
+            "role" : "BCGOV_MASTER_admin_tmhl5tvs"
+        },
+        "Accounts": {
+            "999819716362": {
+                "licensePlate":"m9tvhw-test",
+                "roles":[
+                    "AWSCloudFormationStackSetExecutionRole"
+                ]
+            },    
+            "442271020368":{
+                "licensePlate":"m9tvhw-tools",
+                "roles":[
+                    "AWSCloudFormationStackSetExecutionRole"
+                ]
+            },
+            "374838549618": {
+                "licensePlate":"m9tvhw-dev",
+                "roles":[
+                    "AWSCloudFormationStackSetExecutionRole"
+                ]
+            },  
+            "142393879932": {
+                "licensePlate":"m9tvhw-prod",
+                "roles":[
+                    "AWSCloudFormationStackSetExecutionRole"
+                ]
+            }
+        }
+    },
+
+    "LZ1": {
+        "Master":{
+            "accountNumber" : "940346833507", 
+            "licensePlate" : "Province of British Columbia",
+            "role" : "BCGOV_MASTER_admin_tmhl5tvs"
+        },
+        "Accounts": {
+            "513114711595": {
+                "licensePlate":"f2u30s-tools",
+                "roles":[
+                    "AWSCloudFormationStackSetExecutionRole"
+                ]
+            },    
+            "900136227765":{
+                "licensePlate":"f2u30s-dev",
+                "roles":[
+                    "AWSCloudFormationStackSetExecutionRole"
+                ]
+            },
+            "032091603982": {
+                "licensePlate":"ubwyx8-dev",
+                "roles":[
+                    "AWSCloudFormationStackSetExecutionRole"
+                ]
+            },  
+            "709720252926": {
+                "licensePlate":"ubwyx8-sandbox",
+                "roles":[
+                    "AWSCloudFormationStackSetExecutionRole"
+                ]
+            }
+        }
+    },
+    "LZ2": {
+        "Master":{
+            "accountNumber" : "334132478648", 
+            "licensePlate" : "awslz2",
+            "role" : "BCGOV_MASTER_admin_umafubc9"
+        },
+        "Accounts":{
+            "534823255669": {
+                "licensePlate":"td5cou-dev",
+                "roles":[
+                    "AWSCloudFormationStackSetExecutionRole"
+                ]
+            },    
+            "095918508201":{
+                "licensePlate":"td5cou-sandbox",
+                "roles":[
+                    "AWSCloudFormationStackSetExecutionRole"
+                ]
+            }
+        }
+    }
+}
