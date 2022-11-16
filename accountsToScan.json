@@ -72,7 +72,7 @@
             "licensePlate" : "awslz2",
             "role" : "BCGOV_MASTER_admin_umafubc9"
         },
-        "Accounts": {
+        "Accounts":{
             "534823255669": {
                 "licensePlate":"td5cou-dev",
                 "roles":[
