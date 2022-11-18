@@ -1,4 +1,3 @@
-
 import os
 import subprocess
 import suppFunct
@@ -12,14 +11,12 @@ from os.path import exists
 #  AWS_SESSION_TOKEN
 #  AWS_DEFAULT_REGION
 
-
 def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     suppFunct.checkExistCreate(resultsFile)
 
     ############################################################################################
     ########   Gathering the data section
     ############################################################################################
-
 
     ##############################################
     # Using the get-account-authorization-details  API
@@ -32,19 +29,12 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     numberIAMUsers=output.rstrip('\r\n') 
     
     ########################################################################
-    ########################################################################
-    
-  
-    #os.system(' jq \'.UserDetailList | length \' ./apiResults.txt > borrar.json')
-    #numberIAMUsers=suppFunct.getOutput('./borrar.json')
-   #suppFunct.saveValues(resultsFile,suppFunct.addQuotes('awsNumberIamUsers'),numberIAMUsers, True)
 
     with open(resultsFile, 'a') as f:
         f.write(suppFunct.addTab(suppFunct.addQuotes('ListIAMUsers')) +' : {\n')
         
         if numberIAMUsers!='"n/a"' and int(numberIAMUsers)>0:
            
-
             for x in range(int(numberIAMUsers)):
                 valueIAMUserName= subprocess.check_output('jq \'.UserDetailList[' + str(x) + '].UserName \'  ./apiResults.json ', shell=True)
                 valueNumberAttachedPolicies= subprocess.check_output('jq \'.UserDetailList[' + str(x) + '].AttachedManagedPolicies | length \'  ./apiResults.json ', shell=True)
