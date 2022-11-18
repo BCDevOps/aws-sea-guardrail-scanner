@@ -167,11 +167,15 @@ def compareFile(olderSnapshotConfigName,newerSnapshotConfigName,olderSnapshotPol
     if len(olderSnapshotConfigName.split("_"))==4:
         # "Manual" snapshot
         roleType=olderSnapshotConfigName.split("_")[1]
-        LicensePlate=olderSnapshotConfigName.split("_")[2]
+        licensePlate=olderSnapshotConfigName.split("_")[2]
     elif  len(olderSnapshotConfigName.split("_"))==5: 
         # "Automated" snapshot
         roleType=olderSnapshotConfigName.split("_")[1]+"_"+olderSnapshotConfigName.split("_")[2]
-        LicensePlate=olderSnapshotConfigName.split("_")[3]
+        licensePlate=olderSnapshotConfigName.split("_")[3]
+    elif  len(olderSnapshotConfigName.split("_"))>5: 
+        # "BCGOV_MASTER" account snapshot
+        roleType=olderSnapshotConfigName.split("_")[1]+ "_" + olderSnapshotConfigName.split("_")[2] + "_" + olderSnapshotConfigName.split("_")[3]+ "_" + olderSnapshotConfigName.split("_")[4]+ "_" + olderSnapshotConfigName.split("_")[5] # Gets the role + config string
+        licensePlate=olderSnapshotConfigName.split("_")[6] # Gets the license plate 
     else:
         print("The name of the file does not follow the standard format")
         quit()    
@@ -308,7 +312,7 @@ def compareFile(olderSnapshotConfigName,newerSnapshotConfigName,olderSnapshotPol
 
     ################################## Accounts
     html=html+ "<hr class=\"dashed\">\n"
-    html=html+ "<H2>Lambda Functions</H2>\n"
+    html=html+ "<H2>Accounts</H2>\n"
 
     if olderSnapshotConfig["awsTotalNumberAccounts"]!=newerSnapshotConfig["awsTotalNumberAccounts"]:
         html=html+"<P>The number of <B>accounts</B> in LZ" + LZ + "  has changed from  : <B>" + str(olderSnapshotConfig["awsTotalNumberAccounts"])+ "</B> to <B>" + str(newerSnapshotConfig["awsTotalNumberAccounts"]) + "</B></P>\n"
@@ -587,7 +591,7 @@ def compareFile(olderSnapshotConfigName,newerSnapshotConfigName,olderSnapshotPol
     html=html+"</html>\n"
     
 
-    with open('./'+ olderDate + '_' + newerDate + '_' + roleType + "_" + LicensePlate + "_LZ" + LZ+ '.html', 'w') as f: #The report name is harcoded.
+    with open('./'+ olderDate + '_' + newerDate + '_' + roleType + "_" + licensePlate + "_LZ" + LZ+ '.html', 'w') as f: #The report name is harcoded.
         f.write(html)
         
     return
