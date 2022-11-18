@@ -210,9 +210,16 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
     # Using the list-organizational-units-for-parent   API
     ##############################################
     # Checks the number of Organizational units in the Landing Zone
-    # the r-t8h3 was extracted from the GUI. Do not know how to do it from API with the account I am using
+    # the r-gd0z/r-431j/r-t8h3 values were extracted from the GUI. Do not know how to do it from API with the account I am using
+    # r-gd0z for LZ0
+    # r-431j for LZ1
+    # r-t8h3 for LZ2
+    
+    parentID=["r-gd0z","r-431j","r-t8h3"]
+    
+    
     ##############################################    
-    os.system('aws organizations list-organizational-units-for-parent --parent-id r-t8h3| jq \'.OrganizationalUnits[] | {Id, Name} \'  > apiResults.json')
+    os.system('aws organizations list-organizational-units-for-parent --parent-id ' + parentID[int(LZ)] +' | jq \'.OrganizationalUnits[] | {Id, Name} \'  > apiResults.json')
     os.system('jq -r \'[.[]] | @csv\' apiResults.json > apiResults.txt') #Convert the json file to csv, makes life easier for next iteration
     ##############################################
     # Now, it checks the number of accounts associated to each of the organizational units

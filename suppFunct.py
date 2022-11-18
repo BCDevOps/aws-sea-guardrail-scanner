@@ -321,34 +321,34 @@ def compareFile(olderSnapshotConfigName,newerSnapshotConfigName,olderSnapshotPol
     html=html+ "<H3>Account with Arn change</H3>\n"
 
     changeFlag=0 # Reset the flag
-    for key,value in olderSnapshotConfig["List_of_Accounts"].items():
-        if key in newerSnapshotConfig["List_of_Accounts"]:
-            if olderSnapshotConfig["List_of_Accounts"][key]!=newerSnapshotConfig["List_of_Accounts"][key]:
-                html=html+"<P>The Account with name <B>" + key + "</B> has changed its Arn from <I>" + olderSnapshotConfig["List_of_Accounts"][key] + "</I> to <I>" + newerSnapshotConfig["List_of_Accounts"][key] + "</I></P>\n"
-                changeFlag=1   
+  #  for key,value in olderSnapshotConfig["List_of_Accounts"].items():
+  #      if key in newerSnapshotConfig["List_of_Accounts"]:
+  #          if olderSnapshotConfig["List_of_Accounts"][key]!=newerSnapshotConfig["List_of_Accounts"][key]:
+  #              html=html+"<P>The Account with name <B>" + key + "</B> has changed its Arn from <I>" + olderSnapshotConfig["List_of_Accounts"][key] + "</I> to <I>" + newerSnapshotConfig["List_of_Accounts"][key] + "</I></P>\n"
+  #              changeFlag=1   
                 
-    if changeFlag==0:
-        html=html+"<P>There have been no changes in any Account Arn</P>\n"
+  #  if changeFlag==0:
+  #      html=html+"<P>There have been no changes in any Account Arn</P>\n"
 
     html=html+ "<H3>New Accounts</H3>\n"
     changeFlag=0 # Reset the flag
-    for key,value in newerSnapshotConfig["List_of_Accounts"].items():
-        if key not in olderSnapshotConfig["List_of_Accounts"]:
-            html=html+"<P>There is a Account with name <B>" + key + "</B> and with Arn <B>" +  newerSnapshotConfig["List_of_Accounts"][key] +"</B></P>\n"
-            changeFlag=1   
+  #  for key,value in newerSnapshotConfig["List_of_Accounts"].items():
+  #      if key not in olderSnapshotConfig["List_of_Accounts"]:
+  #          html=html+"<P>There is a Account with name <B>" + key + "</B> and with Arn <B>" +  newerSnapshotConfig["List_of_Accounts"][key] +"</B></P>\n"
+  #          changeFlag=1   
 
-    if changeFlag==0:
-        html=html+"<P>No new Accounts have been added</P>\n"
+  #  if changeFlag==0:
+  #      html=html+"<P>No new Accounts have been added</P>\n"
 
-    html=html+ "<H3>Deleted Accounts</H3>\n"
-    changeFlag=0 # Reset the flag
-    for key,value in olderSnapshotConfig["List_of_Accounts"].items():
-        if key not in newerSnapshotConfig["List_of_Accounts"]:
-            html=html+"<P>The Account with name <B>" + key + "</B> has been deleted</P>\n"
-            changeFlag=1   
+ #   html=html+ "<H3>Deleted Accounts</H3>\n"
+ #   changeFlag=0 # Reset the flag
+ #   for key,value in olderSnapshotConfig["List_of_Accounts"].items():
+ #       if key not in newerSnapshotConfig["List_of_Accounts"]:
+ #           html=html+"<P>The Account with name <B>" + key + "</B> has been deleted</P>\n"
+ #           changeFlag=1   
 
-    if changeFlag==0:
-        html=html+"<P>No accounts have been deleted</P>\n"
+ #   if changeFlag==0:
+ #       html=html+"<P>No accounts have been deleted</P>\n"
 
 
     ################################## Lambda Functions
