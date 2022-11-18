@@ -47,8 +47,14 @@ policyFiles = list(filter(r.match, jsonFiles)) # Get all json files in the folde
 
 
 while len(configFiles)>1:
-    role=configFiles[0].split("_")[1] # Gets the role + config string
-    licensePlate=configFiles[0].split("_")[2] # Gets the license plate
+    role=configFiles[0].split("_")[1]+ "_" + configFiles[0].split("_")[2] # Gets the role + config string
+    licensePlate=configFiles[0].split("_")[3] # Gets the license plate
+    #Special case for the BCGOV_Master_admin_xxxxxxx accounts, as the "role" contains underscores 
+    if "BCGOV_MASTER" in configFiles[0]:
+        role=configFiles[0].split("_")[1]+ "_" + configFiles[0].split("_")[2]+ "_" +configFiles[0].split("_")[3]+ "_" +configFiles[0].split("_")[4]+ "_" +configFiles[0].split("_")[5] # Gets the role + config string
+        licensePlate=configFiles[0].split("_")[6] # Gets the license plate
+    
+    
     print("----->"+ licensePlate)
     r = re.compile(".*" + role +"_"+ licensePlate +"_")
     workingFiles = list(filter(r.match, configFiles)) # Get all config files with the same license plate and sort them

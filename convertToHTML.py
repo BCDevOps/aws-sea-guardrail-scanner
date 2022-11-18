@@ -118,7 +118,7 @@ def convertKeyParam(resultsFile,LZ):
    
    
     if str(jsonData["OrganizationsInformation"]["numberOrganizationUnits"])!='n/a':
-        html=html+ "<H3>List of Organization Information </H3>\n"
+        html=html+ "<H3>List of Organization - <I>Name : Number of accounts</I></H3>\n"
         html=html+"<UL>"
         jsn_list = jsonData['OrganizationsInformation']
         for key in jsn_list:
