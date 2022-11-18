@@ -45,7 +45,7 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
         if numberIAMUsers!='"n/a"' and int(numberIAMUsers)>0:
            
 
-            for x in range(int(numberIAMUsers)-1):
+            for x in range(int(numberIAMUsers)):
                 valueIAMUserName= subprocess.check_output('jq \'.UserDetailList[' + str(x) + '].UserName \'  ./apiResults.json ', shell=True)
                 valueNumberAttachedPolicies= subprocess.check_output('jq \'.UserDetailList[' + str(x) + '].AttachedManagedPolicies | length \'  ./apiResults.json ', shell=True)
                 value=valueIAMUserName.decode("utf-8").rstrip('\r\n')  + " : " + valueNumberAttachedPolicies.decode("utf-8").rstrip('\r\n') +  ',\n'
@@ -385,7 +385,7 @@ def awsConfigValues(awsRoleUsed,LicensePlate,resultsFile,LZ):
 
             #Write the last role of the list
             valueIAMUserName= subprocess.check_output('jq \'.UserDetailList[' + str(int(numberIAMUsers)-1)  + '].UserName \'  ./apiResults.json ', shell=True)
-            valueNumberAttachedPolicies= subprocess.check_output('jq \'.UserDetailList[' + str(int(numberIAMUsers)-1)  + '].AttachedManagedPolicies[] | length \'  ./apiResults.json ', shell=True)
+            valueNumberAttachedPolicies= subprocess.check_output('jq \'.UserDetailList[' + str(int(numberIAMUsers)-1)  + '].AttachedManagedPolicies | length \'  ./apiResults.json ', shell=True)
             value=valueIAMUserName.decode("utf-8").rstrip('\r\n')  + " : " + valueNumberAttachedPolicies.decode("utf-8").rstrip('\r\n') +  '\n'
             
             f.write(suppFunct.addTab(suppFunct.addTab(value)))
